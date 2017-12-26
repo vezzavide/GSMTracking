@@ -10,6 +10,9 @@ import java.util.logging.Logger;
 import java.util.logging.FileHandler;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -46,6 +49,7 @@ public class TestMachine {
     private MysqlDataSource dataSource;
     private boolean debug = true;
     private long readTimeOut = 1000;
+    private boolean autostart = false;
     
     public TestMachine(){
         // TODO: load settings
@@ -136,6 +140,34 @@ public class TestMachine {
         return connected;
     }
     
+    public String getSerialPort(){
+        return serialPort.getSystemPortName();
+    }
+    
+    public String getMachine(){
+        return machine;
+    }
+    
+    public String getDatabaseServerName(){
+        return databaseServerName;
+    }
+    
+    public String getDatabaseUser(){
+        return databaseUser;
+    }
+    
+    public String getDatabasePassword(){
+        return databasePassword;
+    }
+    
+    public boolean isAutostartEnabled(){
+        return autostart;
+    }
+    
+    public boolean isDebugEnabled(){
+        return debug;
+    }
+    
     public void changeProperties(
             String serialPort,
             String machine,
@@ -144,20 +176,43 @@ public class TestMachine {
             String databasePassword,
             boolean autostart,
             boolean debug){
-        Properties prop = new Properties();
-        //InputStream in = getClass().getResourceAsStream(machine)
+        Properties properties = new Properties();
+        String propertiesPath = workingDirectory + File.separator + "TestMachine.conf";
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream(propertiesPath);
+        } catch (FileNotFoundException ex) {
+            File f = new File(propertiesPath);
+            f.getParentFile().mkdirs();
+            try {
+                f.createNewFile();
+            } catch (IOException ex1) {
+                Logger.getLogger(TestMachine.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            try {
+                out = new FileOutputStream(propertiesPath);
+            } catch (FileNotFoundException ex1) {
+                Logger.getLogger(TestMachine.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        }
         
-        // TEMPORARY
-        this.debug = debug;
-    }
-    
-    
-    public String getDatabaseServerName(){
-        return databaseServerName;
-    }
-    
-    public String getMachine(){
-        return machine;
+        properties.setProperty("serialPort", serialPort);
+        properties.setProperty("machine", machine);
+        properties.setProperty("databaseServerName", databaseServerName);
+        properties.setProperty("databaseUser", databaseUser);
+        properties.setProperty("databasePassword", databasePassword);
+        Boolean autostartBoolean = autostart;
+        properties.setProperty("autostart", autostartBoolean.toString());
+        Boolean debugtBoolean = debug;
+        properties.setProperty("debug", debugtBoolean.toString());
+        
+        try {
+            properties.store(out, "---Config file for TestMachine application---");
+            out.close();
+        } catch (IOException ex) {
+            Logger.getLogger(TestMachine.class.getName()).log(Level.SEVERE, null, ex);
+            generateDisplayErrorEvent("Errore nel salvare le impostazioni.");
+        }
     }
     
     public boolean newUser(String name, String surname, String username, String password, String databaseName){

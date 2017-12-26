@@ -17,9 +17,16 @@ public class settingsFrame extends javax.swing.JFrame {
      * Creates new form settingsFrame
      */
     public settingsFrame(TestMachineForm parentForm, TestMachine testMachine) {
+        initComponents();
         this.parentForm = parentForm;
         this.testMachine = testMachine;
-        initComponents();
+        //serialPortTextField.setText(testMachine.getSerialPort());
+        machineTextField.setText(testMachine.getMachine());
+        databaseServerNameTextField.setText(testMachine.getDatabaseServerName());
+        databaseUserTextField.setText(testMachine.getDatabaseUser());
+        databasePasswordTextField.setText(testMachine.getDatabasePassword());
+        autostartCheckBox.setSelected(testMachine.isAutostartEnabled());
+        debugCheckBox.setSelected(testMachine.isDebugEnabled());
     }
 
     /**
@@ -197,6 +204,7 @@ public class settingsFrame extends javax.swing.JFrame {
                 autostartCheckBox.isSelected(),
                 debugCheckBox.isSelected());
         this.dispose();
+        
     }//GEN-LAST:event_applyButtonActionPerformed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
