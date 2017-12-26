@@ -50,6 +50,11 @@ public class settingsFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Tracking System - Macchina - Impostazioni");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         jLabel1.setText("Porta seriale di default:");
 
@@ -191,8 +196,13 @@ public class settingsFrame extends javax.swing.JFrame {
                 databasePasswordTextField.getText(),
                 autostartCheckBox.isSelected(),
                 debugCheckBox.isSelected());
-        
+        this.dispose();
     }//GEN-LAST:event_applyButtonActionPerformed
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        // TODO add your handling code here:
+        parentForm.setEnabled(true);
+    }//GEN-LAST:event_formWindowClosed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton applyButton;

@@ -132,6 +132,10 @@ public class TestMachine {
         }
     }
     
+    public boolean isConnected(){
+        return connected;
+    }
+    
     public void changeProperties(
             String serialPort,
             String machine,
@@ -303,7 +307,7 @@ public class TestMachine {
             if (debug){
                 logger.log(Level.SEVERE, "Apertura porta seriale non riuscita");
             }
-            
+            connected = false;
             return false;
         }
     }

@@ -436,7 +436,14 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
 
     private void settingsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_settingsMenuItemActionPerformed
         // TODO add your handling code here:
-        new settingsFrame(this, testMachine).setVisible(true);
+        System.out.println(testMachine.isConnected());
+        if (!testMachine.isConnected()){
+            this.setEnabled(false);
+            new settingsFrame(this, testMachine).setVisible(true);
+        }
+        else {
+            displayError("Errore: per cambiare le impostazioni, fermare la porta seriale");
+        }
     }//GEN-LAST:event_settingsMenuItemActionPerformed
 
     /**
