@@ -27,9 +27,13 @@ public class TestMachine {
     private Board currentBoard;
     private User user;
     private String machine;
+    
+    // State variables
     private boolean errorState = false;
     private boolean readyToGoodToGoSignal = false;
     private boolean serialPortJustStarted = true;
+    private boolean connected = false;
+    
     private FileHandler fileHandler;
     private Logger logger;
     private String workingDirectory = System.getProperty(("user.dir"));
@@ -287,7 +291,7 @@ public class TestMachine {
             if (debug){
                 logger.log(Level.SEVERE, "Apertura porta seriale riuscita");
             }   
-            
+            connected = true;
             return true;
         } catch (NullPointerException ex) {
             //connectButton.setText("null object returned!");
@@ -313,6 +317,7 @@ public class TestMachine {
             //connectButton.setText("null object returned!");
             logger.log(Level.SEVERE, null, ex);
         }
+        connected = false;
     }
     
     public void sendGoodToGoSignal() {
