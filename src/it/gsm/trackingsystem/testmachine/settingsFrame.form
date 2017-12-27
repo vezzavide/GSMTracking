@@ -34,7 +34,7 @@
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       <Component id="applyButton" min="-2" pref="132" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="jTabbedPane4" max="32767" attributes="0"/>
+                  <Component id="jTabbedPane4" pref="449" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -94,7 +94,7 @@
                                   <Component id="autostartCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="debugCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="0" pref="176" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="147" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -186,7 +186,7 @@
             </Component>
             <Component class="javax.swing.JCheckBox" name="autostartCheckBox">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Autostart all&apos;avvio (se possibile)"/>
+                <Property name="text" type="java.lang.String" value="Autostart dopo il login (se possibile)"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="debugCheckBox">

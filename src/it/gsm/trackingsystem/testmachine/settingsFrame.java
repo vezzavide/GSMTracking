@@ -98,7 +98,7 @@ public class settingsFrame extends javax.swing.JFrame {
 
         databasePasswordTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
-        autostartCheckBox.setText("Autostart all'avvio (se possibile)");
+        autostartCheckBox.setText("Autostart dopo il login (se possibile)");
 
         debugCheckBox.setText("Debug");
 
@@ -137,7 +137,7 @@ public class settingsFrame extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(autostartCheckBox)
                             .addComponent(debugCheckBox))
-                        .addGap(0, 176, Short.MAX_VALUE)))
+                        .addGap(0, 147, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -240,7 +240,7 @@ public class settingsFrame extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(applyButton, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jTabbedPane4))
+                    .addComponent(jTabbedPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(

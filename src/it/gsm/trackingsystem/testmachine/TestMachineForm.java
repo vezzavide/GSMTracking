@@ -171,6 +171,17 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
 
     }
     
+    @Override
+    public void logoutOccurredEvent(){
+        connectButton.setText("Start");
+        connectButton.setBackground(Color.GREEN);
+        goodToGoButton.setEnabled(false);
+        reScanButton.setEnabled(false);
+        currentUserLabel.setText("");
+        this.setVisible(false);
+        new LoginFrame(this, testMachine).setVisible(true);
+    }
+    
     // Shortens the terminal so that it won't ever be bigger
     // than 500 characters.
     /*
@@ -371,13 +382,14 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
    
     private void logoutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutMenuItemActionPerformed
         // TODO add your handling code here:
-        testMachine.disconnect();
-        connectButton.setText("Start");
-        connectButton.setBackground(Color.GREEN);
-        goodToGoButton.setEnabled(false);
-        reScanButton.setEnabled(false);
-        this.setVisible(false);
-        new LoginFrame(this, testMachine).setVisible(true);
+//        testMachine.disconnect();
+//        connectButton.setText("Start");
+//        connectButton.setBackground(Color.GREEN);
+//        goodToGoButton.setEnabled(false);
+//        reScanButton.setEnabled(false);
+//        this.setVisible(false);
+//        new LoginFrame(this, testMachine).setVisible(true);
+        testMachine.logout();
     }//GEN-LAST:event_logoutMenuItemActionPerformed
 
     private void settingsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_settingsMenuItemActionPerformed

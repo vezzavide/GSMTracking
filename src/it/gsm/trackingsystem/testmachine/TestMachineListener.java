@@ -20,4 +20,5 @@ public interface TestMachineListener {
     void loginOccurredEvent(User user);
     void connectedEvent();
     void disconnectedEvent();
+    void logoutOccurredEvent();
 }

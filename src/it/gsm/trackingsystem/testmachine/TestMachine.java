@@ -51,6 +51,8 @@ public class TestMachine {
     private long readTimeOut = 1000;
     private boolean autostart = false;
     private List<LocalTime> scheduledLogouts;
+    Timer logoutTimer = new Timer();
+    private boolean loggedIn = false;
     
     public TestMachine(){
         // TODO: load settings
@@ -86,13 +88,13 @@ public class TestMachine {
             debug = Boolean.valueOf(properties.getProperty("debug"));
             
             String scheduledLogoutsString = properties.getProperty("scheduledLogouts");
-            if(scheduledLogoutsString != null){
+            if(!scheduledLogoutsString.equals("")){
                 String[] logoutsSplit = scheduledLogoutsString.split("#");
                 List<LocalTime> scheduledLogouts = new ArrayList<>();
                 for (String logout : logoutsSplit){
                     scheduledLogouts.add(LocalTime.parse(logout));
                 }
-                scheduleLogouts(scheduledLogouts);
+                this.scheduledLogouts = scheduledLogouts;
             }
             
             dataSource.setUser(databaseUser);
@@ -186,7 +188,12 @@ public class TestMachine {
         }
     }
     
-    
+    // EVENT
+    public void generateLogoutOccurredEvent(){
+        for (TestMachineListener packetListener : listeners){
+            packetListener.logoutOccurredEvent();
+        }
+    }
     
     public boolean isConnected(){
         return connected;
@@ -294,12 +301,43 @@ public class TestMachine {
         dataSource.setUser(databaseUser);
         dataSource.setPassword(databasePassword);
         dataSource.setServerName(databaseServerName);
-        scheduleLogouts(scheduledLogouts);
+        this.scheduledLogouts = scheduledLogouts;
+        scheduleNextLogout();
     }
     
-    private void scheduleLogouts(List<LocalTime> scheduledLogouts){
-        this.scheduledLogouts = scheduledLogouts;
-        // TODO implement timers
+    private void scheduleNextLogout(){
+        // Deletes the last scheduled logout
+        logoutTimer.cancel();
+        // Finds the nearest login in the (future) timeline
+        if (scheduledLogouts != null){
+            logoutTimer = new Timer();
+            // Initializes nextLogout with maximum value
+            LocalTime nextLogout = LocalTime.MAX;
+            LocalTime now = LocalTime.now();
+            for (int i = 0; i < scheduledLogouts.size(); i++) {
+                // Selects just future logouts
+                LocalTime logout = scheduledLogouts.get(i);
+                if (logout.isAfter(now) && logout.isBefore(nextLogout)) {
+                    nextLogout = logout;
+                }
+            }
+            
+            // Creates a LocalDateTime for next logout
+            LocalDateTime nextLogoutDateTime = nextLogout.atDate(LocalDate.now());
+            // Converts LocalDateTime to date (from java.util), since Timer.schedule supports Date only
+            Date nextLogoutDate = Date.from(nextLogoutDateTime.atZone(ZoneId.systemDefault()).toInstant());
+            
+            // At this point, nextLogoutDate is the nearest future logout in the list
+            logoutTimer.schedule(
+                new TimerTask() {
+                    @Override
+                    public void run() {
+                        logout();
+                        logoutTimer.cancel();
+                    }
+                },
+                nextLogoutDate);
+        }
     }
     
     public boolean newUser(String name, String surname, String username, String password){
@@ -380,6 +418,7 @@ public class TestMachine {
             statement.close();
             
             if(sentPassword.equals(password)){
+                // if this point is reached, login has been succesful
                 user = new User(sentName, sentSurname, sentUsername, sentAdmin, sentLoginID);
                 generateLoginOccurredEvent();
                 
@@ -387,6 +426,8 @@ public class TestMachine {
                 if (autostart) {
                     connect();
                 }
+                loggedIn = true;
+                scheduleNextLogout();
                 return true;
             }
             else{
@@ -401,6 +442,13 @@ public class TestMachine {
                                         + ex.toString());
             return false;
         }
+    }
+    
+    public void logout(){
+        disconnect();
+        user = null;
+        loggedIn = false;
+        generateLogoutOccurredEvent();
     }
     
     public SerialPort[] getAvailableSerialPorts(){
