@@ -7,6 +7,9 @@ package it.gsm.trackingsystem.testmachine;
 
 import com.fazecast.jSerialComm.SerialPort;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
+import java.util.*;
+import java.time.*;
 
 /**
  *
@@ -32,6 +35,11 @@ public class settingsFrame extends javax.swing.JFrame {
         debugCheckBox.setSelected(testMachine.isDebugEnabled());
         // necessary since with javax.swing.ListModel items can' be added
         scheduledLogoutList.setModel(new DefaultListModel<>());
+        if(testMachine.getScheduledLogouts() != null){
+            for (LocalTime logout : testMachine.getScheduledLogouts()){
+                ((DefaultListModel) scheduledLogoutList.getModel()).addElement(logout);
+            }
+        }
     }
 
     /**
@@ -58,8 +66,8 @@ public class settingsFrame extends javax.swing.JFrame {
         debugCheckBox = new javax.swing.JCheckBox();
         serialPortComboBox = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
-        addTimeForLogoutButton = new javax.swing.JButton();
-        deleteTimeForLogoutButton = new javax.swing.JButton();
+        addScheduledLogoutButton = new javax.swing.JButton();
+        deleteScheduledLogoutButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         scheduledLogoutList = new javax.swing.JList<>();
         applyButton = new javax.swing.JButton();
@@ -164,17 +172,17 @@ public class settingsFrame extends javax.swing.JFrame {
 
         jTabbedPane4.addTab("Generali", jPanel1);
 
-        addTimeForLogoutButton.setText("Aggiungi");
-        addTimeForLogoutButton.addActionListener(new java.awt.event.ActionListener() {
+        addScheduledLogoutButton.setText("Aggiungi");
+        addScheduledLogoutButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addTimeForLogoutButtonActionPerformed(evt);
+                addScheduledLogoutButtonActionPerformed(evt);
             }
         });
 
-        deleteTimeForLogoutButton.setText("Elimina");
-        deleteTimeForLogoutButton.addActionListener(new java.awt.event.ActionListener() {
+        deleteScheduledLogoutButton.setText("Elimina");
+        deleteScheduledLogoutButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteTimeForLogoutButtonActionPerformed(evt);
+                deleteScheduledLogoutButtonActionPerformed(evt);
             }
         });
 
@@ -195,8 +203,8 @@ public class settingsFrame extends javax.swing.JFrame {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(deleteTimeForLogoutButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(addTimeForLogoutButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(deleteScheduledLogoutButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(addScheduledLogoutButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -206,9 +214,9 @@ public class settingsFrame extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(addTimeForLogoutButton)
+                        .addComponent(addScheduledLogoutButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(deleteTimeForLogoutButton)
+                        .addComponent(deleteScheduledLogoutButton)
                         .addGap(0, 172, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -254,6 +262,14 @@ public class settingsFrame extends javax.swing.JFrame {
             serialPortToChange = serialPortComboBox.getSelectedItem().toString();
         }
         
+        //creates an arrayList of LocalTime
+        DefaultListModel model = ((DefaultListModel) scheduledLogoutList.getModel());
+        List<LocalTime> scheduledLogouts = new ArrayList<>();
+        for (int i = 0; i < model.getSize(); i++){
+            LocalTime logout = LocalTime.parse(model.get(i).toString());
+            scheduledLogouts.add(logout);
+        }
+        
         testMachine.changeProperties(
                 serialPortToChange,
                 machineTextField.getText(),
@@ -261,7 +277,8 @@ public class settingsFrame extends javax.swing.JFrame {
                 databaseUserTextField.getText(),
                 databasePasswordTextField.getText(),
                 autostartCheckBox.isSelected(),
-                debugCheckBox.isSelected());
+                debugCheckBox.isSelected(),
+                scheduledLogouts);
         this.dispose();
     }//GEN-LAST:event_applyButtonActionPerformed
 
@@ -291,27 +308,38 @@ public class settingsFrame extends javax.swing.JFrame {
         populateComboBox();
     }//GEN-LAST:event_serialPortComboBoxPopupMenuWillBecomeVisible
 
-    private void addTimeForLogoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addTimeForLogoutButtonActionPerformed
+    private void addScheduledLogoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addScheduledLogoutButtonActionPerformed
         // TODO add item
-        ((DefaultListModel) scheduledLogoutList.getModel()).addElement("Orario");
+        //((DefaultListModel) scheduledLogoutList.getModel()).addElement("Orario");
+        
+        String s = (String) JOptionPane.showInputDialog("Inserisci un orario.\nUsa un formato del tipo hh:mm");
+        if (s != null && !s.equals("")){
+            try{
+                LocalTime logout = LocalTime.parse(s);
+                ((DefaultListModel) scheduledLogoutList.getModel()).addElement(logout);
+            }
+            catch(java.time.format.DateTimeParseException ex){
+                JOptionPane.showMessageDialog(this, "Formato ora non valido.", "Errore", JOptionPane.ERROR_MESSAGE);
+                
+            }
+        }
+    }//GEN-LAST:event_addScheduledLogoutButtonActionPerformed
 
-    }//GEN-LAST:event_addTimeForLogoutButtonActionPerformed
-
-    private void deleteTimeForLogoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteTimeForLogoutButtonActionPerformed
+    private void deleteScheduledLogoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteScheduledLogoutButtonActionPerformed
         // chek if this works
         ((DefaultListModel) scheduledLogoutList.getModel()).remove(scheduledLogoutList.getSelectedIndex());
-
-    }//GEN-LAST:event_deleteTimeForLogoutButtonActionPerformed
+        
+    }//GEN-LAST:event_deleteScheduledLogoutButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addTimeForLogoutButton;
+    private javax.swing.JButton addScheduledLogoutButton;
     private javax.swing.JButton applyButton;
     private javax.swing.JCheckBox autostartCheckBox;
     private javax.swing.JTextField databasePasswordTextField;
     private javax.swing.JTextField databaseServerNameTextField;
     private javax.swing.JTextField databaseUserTextField;
     private javax.swing.JCheckBox debugCheckBox;
-    private javax.swing.JButton deleteTimeForLogoutButton;
+    private javax.swing.JButton deleteScheduledLogoutButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

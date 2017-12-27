@@ -5,6 +5,7 @@ package it.gsm.trackingsystem.testmachine;
 
 import com.fazecast.jSerialComm.*;
 import java.awt.Color;
+import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.util.logging.FileHandler;
 import javax.swing.text.BadLocationException;
 import javax.swing.Timer;
 import java.io.File;
+import javax.swing.JOptionPane;
 /**
  *
  * @author abdhul
@@ -65,9 +67,7 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
     
     @Override
     public void displayError(String message){
-        errorTextArea.setText(message);
-        errorDialog.pack();
-        errorDialog.setVisible(true);
+        JOptionPane.showMessageDialog(this, message, "Errore", JOptionPane.ERROR_MESSAGE);
     }
     
     @Override
@@ -194,10 +194,6 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        errorDialog = new javax.swing.JDialog();
-        okButton = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        errorTextArea = new javax.swing.JTextArea();
         connectButton = new javax.swing.JButton();
         reScanButton = new javax.swing.JButton();
         goodToGoButton = new javax.swing.JButton();
@@ -212,46 +208,6 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
         logoutMenuItem = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         settingsMenuItem = new javax.swing.JMenuItem();
-
-        errorDialog.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        errorDialog.setTitle("Error!");
-        errorDialog.setSize(new java.awt.Dimension(30, 30));
-
-        okButton.setText("Ok");
-        okButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                okButtonActionPerformed(evt);
-            }
-        });
-
-        errorTextArea.setEditable(false);
-        errorTextArea.setColumns(20);
-        errorTextArea.setRows(5);
-        jScrollPane1.setViewportView(errorTextArea);
-
-        javax.swing.GroupLayout errorDialogLayout = new javax.swing.GroupLayout(errorDialog.getContentPane());
-        errorDialog.getContentPane().setLayout(errorDialogLayout);
-        errorDialogLayout.setHorizontalGroup(
-            errorDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, errorDialogLayout.createSequentialGroup()
-                .addGroup(errorDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(errorDialogLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1))
-                    .addGroup(errorDialogLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        errorDialogLayout.setVerticalGroup(
-            errorDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(errorDialogLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(okButton)
-                .addContainerGap())
-        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Tracking System - Macchina");
@@ -413,11 +369,6 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
         normalStateEvent();
     }//GEN-LAST:event_reScanButtonActionPerformed
    
-    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        // TODO add your handling code here:
-        errorDialog.dispose();
-    }//GEN-LAST:event_okButtonActionPerformed
-
     private void logoutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutMenuItemActionPerformed
         // TODO add your handling code here:
         testMachine.disconnect();
@@ -481,17 +432,13 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
     private javax.swing.JTextField boardTextField;
     private javax.swing.JButton connectButton;
     private javax.swing.JLabel currentUserLabel;
-    private javax.swing.JDialog errorDialog;
-    private javax.swing.JTextArea errorTextArea;
     private javax.swing.JButton goodToGoButton;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JMenuItem logoutMenuItem;
-    private javax.swing.JButton okButton;
     private javax.swing.JLabel programStateLabel;
     private javax.swing.JButton reScanButton;
     private javax.swing.JMenuItem settingsMenuItem;

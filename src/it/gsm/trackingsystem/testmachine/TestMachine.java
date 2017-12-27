@@ -19,6 +19,7 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.Properties;
+import java.time.*;
 
 /**
  *
@@ -49,6 +50,7 @@ public class TestMachine {
     private boolean debug = true;
     private long readTimeOut = 1000;
     private boolean autostart = false;
+    private List<LocalTime> scheduledLogouts;
     
     public TestMachine(){
         // TODO: load settings
@@ -82,6 +84,16 @@ public class TestMachine {
             databasePassword = properties.getProperty("databasePassword");
             autostart = Boolean.valueOf(properties.getProperty("autostart"));
             debug = Boolean.valueOf(properties.getProperty("debug"));
+            
+            String scheduledLogoutsString = properties.getProperty("scheduledLogouts");
+            if(scheduledLogoutsString != null){
+                String[] logoutsSplit = scheduledLogoutsString.split("#");
+                List<LocalTime> scheduledLogouts = new ArrayList<>();
+                for (String logout : logoutsSplit){
+                    scheduledLogouts.add(LocalTime.parse(logout));
+                }
+                scheduleLogouts(scheduledLogouts);
+            }
             
             dataSource.setUser(databaseUser);
             dataSource.setPassword(databasePassword);
@@ -189,6 +201,10 @@ public class TestMachine {
         }
     }
     
+    public List<LocalTime> getScheduledLogouts(){
+        return scheduledLogouts;
+    }
+    
     public String getMachine(){
         return machine;
     }
@@ -220,7 +236,8 @@ public class TestMachine {
             String databaseUser,
             String databasePassword,
             boolean autostart,
-            boolean debug){
+            boolean debug,
+            List<LocalTime> scheduledLogouts){
         
         // Saves properties
         Properties properties = new Properties();
@@ -251,6 +268,13 @@ public class TestMachine {
         properties.setProperty("autostart", autostartBoolean.toString());
         Boolean debugBoolean = debug;
         properties.setProperty("debug", debugBoolean.toString());
+        
+        String scheduledLogoutsString = "";
+        for (LocalTime logout : scheduledLogouts){
+            scheduledLogoutsString += logout.toString() + "#";
+        }
+        properties.setProperty("scheduledLogouts", scheduledLogoutsString);
+        
         try {
             properties.store(out, "---Config file for TestMachine application---");
             out.close();
@@ -270,6 +294,12 @@ public class TestMachine {
         dataSource.setUser(databaseUser);
         dataSource.setPassword(databasePassword);
         dataSource.setServerName(databaseServerName);
+        scheduleLogouts(scheduledLogouts);
+    }
+    
+    private void scheduleLogouts(List<LocalTime> scheduledLogouts){
+        this.scheduledLogouts = scheduledLogouts;
+        // TODO implement timers
     }
     
     public boolean newUser(String name, String surname, String username, String password){
@@ -415,7 +445,8 @@ public class TestMachine {
             }
             else{
                 //System.out.println("No porta presente");
-                generateDisplayErrorEvent("Errore dalla porta seriale.");
+                generateDisplayErrorEvent("La porta seriale di default non è più presente."
+                + System.lineSeparator() + "Selezionarne una nuova tra le disponibili nel menu impostazioni.");
 
                 if (debug) {
                     logger.log(Level.SEVERE, "Apertura porta seriale non riuscita");
