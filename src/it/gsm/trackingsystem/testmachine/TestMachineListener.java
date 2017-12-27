@@ -21,4 +21,5 @@ public interface TestMachineListener {
     void connectedEvent();
     void disconnectedEvent();
     void logoutOccurredEvent();
+    void logoutScheduledEvent(String logout);
 }

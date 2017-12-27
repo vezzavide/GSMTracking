@@ -142,6 +142,12 @@ public class LoginFrame extends javax.swing.JFrame {
 
         jLabel3.setText("Password");
 
+        passwordTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                passwordTextFieldActionPerformed(evt);
+            }
+        });
+
         loginButton.setText("Login");
         loginButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -217,10 +223,7 @@ public class LoginFrame extends javax.swing.JFrame {
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
         //parentForm.setVisible(true);
-        if (testMachine.login(usernameTextField.getText(), passwordTextField.getText())){
-            //parentForm.setVisible(true);
-            this.dispose();
-        }
+        login();
     }//GEN-LAST:event_loginButtonActionPerformed
 
     private void newUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newUserButtonActionPerformed
@@ -250,6 +253,17 @@ public class LoginFrame extends javax.swing.JFrame {
         new settingsFrame(this, testMachine).setVisible(true);
     }//GEN-LAST:event_settingsMenuItemActionPerformed
 
+    private void passwordTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordTextFieldActionPerformed
+        // TODO add your handling code here:
+        login();
+    }//GEN-LAST:event_passwordTextFieldActionPerformed
+
+    private void login(){
+        if (testMachine.login(usernameTextField.getText(), passwordTextField.getText())){
+            //parentForm.setVisible(true);
+            this.dispose();
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;

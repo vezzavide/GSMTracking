@@ -148,7 +148,9 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
     
     @Override
     public void loginOccurredEvent(User user){
-        currentUserLabel.setText("Operatore corrente: " + user.getSurname() + " " + user.getName() + " ");
+        currentUserLabel.setText("Operatore: " + user.getSurname() + " " + user.getName());
+        //nextLogoutLabel.setText("Prossimo logout: " + testMachine.getNextLogoutString());
+        this.pack();
         setVisible(true);
     }
     
@@ -156,8 +158,8 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
     public void connectedEvent(){
         connectButton.setText("Stop");
         connectButton.setBackground(Color.RED);
-        programStateLabel.setText(" Stato programma: ATTIVO ");
-        programStateLabel.setBorder(javax.swing.BorderFactory.createLineBorder(Color.green, 2));
+        programStateLabel.setText("Stato: ATTIVO");
+        this.pack();
     }
     
     @Override
@@ -166,9 +168,11 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
         connectButton.setBackground(Color.GREEN);
         goodToGoButton.setEnabled(false);
         reScanButton.setEnabled(false);
-        programStateLabel.setText(" Stato programma: SPENTO ");
-        programStateLabel.setBorder(javax.swing.BorderFactory.createLineBorder(Color.red, 2));
-
+        programStateLabel.setText("Stato: SPENTO");
+        boardTextField.setText("");
+        testOutcomeTextField.setText("");
+        testOutcomeTextField.setBackground(null);
+        this.pack();
     }
     
     @Override
@@ -180,6 +184,12 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
         currentUserLabel.setText("");
         this.setVisible(false);
         new LoginFrame(this, testMachine).setVisible(true);
+    }
+    
+    @Override
+    public void logoutScheduledEvent(String logout){
+        nextLogoutLabel.setText("Prossimo logout: " + logout);
+        this.pack();
     }
     
     // Shortens the terminal so that it won't ever be bigger
@@ -214,6 +224,10 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
         jLabel3 = new javax.swing.JLabel();
         currentUserLabel = new javax.swing.JLabel();
         programStateLabel = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        jSeparator2 = new javax.swing.JSeparator();
+        nextLogoutLabel = new javax.swing.JLabel();
+        jSeparator3 = new javax.swing.JSeparator();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         logoutMenuItem = new javax.swing.JMenuItem();
@@ -262,13 +276,16 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
 
         jLabel3.setText("Esito test:");
 
-        currentUserLabel.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
         currentUserLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        currentUserLabel.setText("Operatore corrente:");
-        currentUserLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        currentUserLabel.setText("Operatore:");
 
-        programStateLabel.setText(" Stato programma: SPENTO ");
-        programStateLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        programStateLabel.setText(" Stato: SPENTO ");
+
+        jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
+
+        nextLogoutLabel.setText("Prossimo logout:");
+
+        jSeparator3.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         jMenu1.setText("Operatore");
 
@@ -300,28 +317,37 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jSeparator1)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(currentUserLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(connectButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(programStateLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(reScanButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(goodToGoButton))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(boardTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2))
+                            .addComponent(jLabel2)
+                            .addComponent(boardTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel3)
-                                .addGap(0, 78, Short.MAX_VALUE))
-                            .addComponent(testOutcomeTextField))))
+                                .addGap(0, 12, Short.MAX_VALUE))
+                            .addComponent(testOutcomeTextField)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(programStateLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(nextLogoutLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(currentUserLabel)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -330,20 +356,33 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(connectButton)
-                    .addComponent(reScanButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(goodToGoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(programStateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(goodToGoButton)
+                    .addComponent(reScanButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(boardTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(testOutcomeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(23, 23, 23)
-                .addComponent(currentUserLabel)
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(boardTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(testOutcomeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(23, 23, 23)
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(currentUserLabel, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(nextLogoutLabel, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(programStateLabel, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jSeparator2, javax.swing.GroupLayout.DEFAULT_SIZE, 18, Short.MAX_VALUE)
+                                .addContainerGap())))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
 
         pack();
@@ -399,7 +438,7 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
             new settingsFrame(this, testMachine).setVisible(true);
         }
         else {
-            displayError("Errore: per cambiare le impostazioni, fermare la porta seriale");
+            displayError("Errore: per cambiare le impostazioni, ferma prima la porta seriale.");
         }
     }//GEN-LAST:event_settingsMenuItemActionPerformed
 
@@ -450,7 +489,11 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
     private javax.swing.JMenuItem logoutMenuItem;
+    private javax.swing.JLabel nextLogoutLabel;
     private javax.swing.JLabel programStateLabel;
     private javax.swing.JButton reScanButton;
     private javax.swing.JMenuItem settingsMenuItem;

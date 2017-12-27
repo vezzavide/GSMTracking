@@ -47,12 +47,13 @@ public class TestMachine {
     private String databasePassword;
     private String databaseServerName;
     private MysqlDataSource dataSource;
-    private boolean debug = true;
+    private boolean debug;
     private long readTimeOut = 1000;
-    private boolean autostart = false;
+    private boolean autostart;
     private List<LocalTime> scheduledLogouts;
     Timer logoutTimer = new Timer();
     private boolean loggedIn = false;
+    private String nextLogoutString;
     
     public TestMachine(){
         // TODO: load settings
@@ -64,12 +65,7 @@ public class TestMachine {
         } catch (IOException | SecurityException ex) {
             logger.log(Level.SEVERE, null, ex);
         }
-        /*
-        databaseUser = "application";
-        databasePassword = "12Application";
-        databaseServerName = "localhost";
-        machine = "A";
-        */
+        
         dataSource = new MysqlDataSource();
         
         try{
@@ -81,11 +77,11 @@ public class TestMachine {
             serialPort = SerialPort.getCommPort(properties.getProperty("serialPort", null));
             //System.out.println("porta scelta: " + serialPort.getSystemPortName());
             machine = properties.getProperty("machine");
-            databaseServerName = properties.getProperty("databaseServerName");
-            databaseUser = properties.getProperty("databaseUser");
-            databasePassword = properties.getProperty("databasePassword");
-            autostart = Boolean.valueOf(properties.getProperty("autostart"));
-            debug = Boolean.valueOf(properties.getProperty("debug"));
+            databaseServerName = properties.getProperty("databaseServerName", "localhost");
+            databaseUser = properties.getProperty("databaseUser", "application");
+            databasePassword = properties.getProperty("databasePassword", "12Application");
+            autostart = Boolean.valueOf(properties.getProperty("autostart", "True"));
+            debug = Boolean.valueOf(properties.getProperty("debug", "False"));
             
             String scheduledLogoutsString = properties.getProperty("scheduledLogouts");
             if(!scheduledLogoutsString.equals("")){
@@ -193,6 +189,16 @@ public class TestMachine {
         for (TestMachineListener packetListener : listeners){
             packetListener.logoutOccurredEvent();
         }
+    }
+    
+    public void generateLogoutScheduledEvent(String logout){
+        for (TestMachineListener packetListener : listeners){
+            packetListener.logoutScheduledEvent(logout);
+        }
+    }
+    
+    public String getNextLogoutString(){
+        return nextLogoutString;
     }
     
     public boolean isConnected(){
@@ -322,6 +328,8 @@ public class TestMachine {
                 }
             }
             
+            nextLogoutString = nextLogout.toString();
+            
             // Creates a LocalDateTime for next logout
             LocalDateTime nextLogoutDateTime = nextLogout.atDate(LocalDate.now());
             // Converts LocalDateTime to date (from java.util), since Timer.schedule supports Date only
@@ -338,6 +346,10 @@ public class TestMachine {
                 },
                 nextLogoutDate);
         }
+        else{
+            nextLogoutString = "nessuno";
+        }
+        generateLogoutScheduledEvent(nextLogoutString);
     }
     
     public boolean newUser(String name, String surname, String username, String password){
@@ -359,8 +371,12 @@ public class TestMachine {
                     + password
                     + "', '0');";
             statement.executeUpdate(query);
-            System.out.println("Query: " + query);
+            //System.out.println("Query: " + query);
             return true;
+        }
+        catch(com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException ex){
+            generateDisplayErrorEvent("Errore: username già in uso!");
+            return false;
         }
         catch(SQLException ex) {
             logger.log(Level.SEVERE, null, ex);
@@ -369,7 +385,6 @@ public class TestMachine {
                                         + ex.toString());
             return false;
         }
-        //return true;
     }
     
     public boolean login(String username, String password){
@@ -420,7 +435,7 @@ public class TestMachine {
             if(sentPassword.equals(password)){
                 // if this point is reached, login has been succesful
                 user = new User(sentName, sentSurname, sentUsername, sentAdmin, sentLoginID);
-                generateLoginOccurredEvent();
+                //generateLoginOccurredEvent();
                 
                 // Since a login occurred, if autostart is enabled, the program starts
                 if (autostart) {
@@ -428,6 +443,7 @@ public class TestMachine {
                 }
                 loggedIn = true;
                 scheduleNextLogout();
+                generateLoginOccurredEvent();
                 return true;
             }
             else{
@@ -599,7 +615,13 @@ public class TestMachine {
         if (debug){
             logger.log(Level.SEVERE, "Ho finito di leggere il data packet. la scheda ricevuta è: " + currentBoard.getCode());
         }
-        return currentBoard.check();
+        if (currentBoard.check()){
+            generateDataPacketReceivedEvent(currentBoard);
+            return true;
+        }
+        else{
+            return false;
+        }
     }
     
     private Integer readErrorPacketInBlockingMode(){
@@ -656,9 +678,11 @@ public class TestMachine {
                             + System.lineSeparator()
                             + "Possibili cause:"
                             + System.lineSeparator()
-                            + "- connessione fisica tra Arduino e Barcode Scanner compromessa"
+                            + "- etichetta rovinata o non presente, controllare la scheda"
                             + System.lineSeparator()
-                            + "- barcode Scanner spento"
+                            + "- connessione fisica tra Arduino e scanner compromessa"
+                            + System.lineSeparator()
+                            + "- scanner spento"
                             + System.lineSeparator()
                             + "- vetro dello scanner sporco");
                     break;
@@ -795,6 +819,7 @@ public class TestMachine {
                 
                 switch (header) {
                     case "D":
+                        //System.out.println("Ricevuto D");
                         if (debug){
                             logger.log(Level.SEVERE, "E' stato ricevuto un header data packet");
                         }
@@ -834,8 +859,9 @@ public class TestMachine {
                         else{
                             if (debug){
                                 logger.log(Level.SEVERE, "Timeout di lettura pacchetto dati, riscansiono");
-                                sendReScanSignal();
+                                
                             }
+                            sendReScanSignal();
                         }
                         flushSerialPort();
                         if (debug){
@@ -843,6 +869,7 @@ public class TestMachine {
                         }
                         break;
                     case "E":
+                        //System.err.println("ricevuto E");
                         if (debug){
                             logger.log(Level.SEVERE, "è stato ricevuto un header error packet");
                         }
@@ -864,6 +891,7 @@ public class TestMachine {
                         if (debug){
                             logger.log(Level.SEVERE, "è stato ricevuto un header request good to go packet");
                         }
+                        //System.out.println("ricevuto G, Serial just started: " + serialPortJustStarted);
                         if(serialPortJustStarted){
                             //serialPortJustStarted = false;
                             if (debug){
