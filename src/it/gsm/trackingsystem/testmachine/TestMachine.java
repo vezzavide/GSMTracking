@@ -45,7 +45,6 @@ public class TestMachine {
     private String databaseUser;
     private String databasePassword;
     private String databaseServerName;
-    private String databaseName;
     private MysqlDataSource dataSource;
     private boolean debug = true;
     private long readTimeOut = 1000;
@@ -140,8 +139,13 @@ public class TestMachine {
         return connected;
     }
     
-    public String getSerialPort(){
-        return serialPort.getSystemPortName();
+    public String getSerialPortString(){
+        if (serialPort != null){
+            return serialPort.getSystemPortName();
+        }
+        else{
+            return null;
+        }
     }
     
     public String getMachine(){
@@ -215,9 +219,8 @@ public class TestMachine {
         }
     }
     
-    public boolean newUser(String name, String surname, String username, String password, String databaseName){
+    public boolean newUser(String name, String surname, String username, String password){
         try{
-            dataSource.setServerName(databaseName);
             Connection conn = dataSource.getConnection();
             Statement statement = conn.createStatement();
             
@@ -248,9 +251,8 @@ public class TestMachine {
         //return true;
     }
     
-    public boolean login(String username, String password, String databaseName, String machine){
+    public boolean login(String username, String password){
         try{
-            dataSource.setServerName(databaseName);
             Connection conn = dataSource.getConnection();
             Statement statement = conn.createStatement();
             /* example query:
@@ -296,7 +298,6 @@ public class TestMachine {
             
             if(sentPassword.equals(password)){
                 user = new User(sentName, sentSurname, sentUsername, sentAdmin, sentLoginID);
-                this.machine = machine;
                 generateLoginOccurredEvent();
                 return true;
             }
@@ -337,13 +338,12 @@ public class TestMachine {
         }
     }
     
-    public boolean connect(SerialPort port) {
+    public boolean connect() {
         if (debug){
             logger.log(Level.SEVERE, "Tento apertura porta seriale");
         }
         try {
             serialPortJustStarted = true;
-            serialPort = port;
             serialPort.openPort();
             createSerialPortListener();
             
@@ -373,8 +373,7 @@ public class TestMachine {
             serialPort.closePort();
             serialPort.removeDataListener();
         } catch (NullPointerException ex) {
-            //connectButton.setText("null object returned!");
-            logger.log(Level.SEVERE, null, ex);
+            //
         }
         connected = false;
     }
