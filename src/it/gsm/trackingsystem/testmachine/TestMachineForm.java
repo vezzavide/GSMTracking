@@ -156,7 +156,7 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
         connectButton.setText("Stop");
         connectButton.setBackground(Color.RED);
         programStateLabel.setText(" Stato programma: ATTIVO ");
-        programStateLabel.setForeground(null);
+        programStateLabel.setBorder(javax.swing.BorderFactory.createLineBorder(Color.green, 2));
     }
     
     @Override
@@ -166,8 +166,8 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
         goodToGoButton.setEnabled(false);
         reScanButton.setEnabled(false);
         programStateLabel.setText(" Stato programma: SPENTO ");
-        programStateLabel.setForeground(Color.red);
-        
+        programStateLabel.setBorder(javax.swing.BorderFactory.createLineBorder(Color.red, 2));
+
     }
     
     // Shortens the terminal so that it won't ever be bigger
