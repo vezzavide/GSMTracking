@@ -60,15 +60,40 @@ public class TestMachine {
         } catch (IOException | SecurityException ex) {
             logger.log(Level.SEVERE, null, ex);
         }
+        /*
         databaseUser = "application";
         databasePassword = "12Application";
         databaseServerName = "localhost";
         machine = "A";
-        
+        */
         dataSource = new MysqlDataSource();
-        dataSource.setUser(databaseUser);
-        dataSource.setPassword(databasePassword);
-        dataSource.setServerName(databaseServerName);
+        
+        try{
+            Properties properties = new Properties();
+            String propertiesPath = workingDirectory + File.separator + "TestMachine.conf";
+            FileInputStream in = new FileInputStream(propertiesPath);
+            properties.load(in);
+            in.close();
+            serialPort = SerialPort.getCommPort(properties.getProperty("serialPort", null));
+            System.out.println("porta scelta: " + serialPort.getSystemPortName());
+            machine = properties.getProperty("machine");
+            databaseServerName = properties.getProperty("databaseServerName");
+            databaseUser = properties.getProperty("databaseUser");
+            databasePassword = properties.getProperty("databasePassword");
+            autostart = Boolean.valueOf(properties.getProperty("autostart"));
+            debug = Boolean.valueOf(properties.getProperty("debug"));
+            
+            dataSource.setUser(databaseUser);
+            dataSource.setPassword(databasePassword);
+            dataSource.setServerName(databaseServerName);
+        }
+        catch(FileNotFoundException ex){
+            generateDisplayErrorEvent("Errore nel caricare le impostazioni! Inserirle manualmente.");
+        }
+        catch(IOException ex){
+            generateDisplayErrorEvent("Errore nel caricare le impostazioni! Inserirle manualmente.");
+        }
+        
         if (debug){
             logger.log(Level.SEVERE, "Nuova istanza di TestMachine");
         }
@@ -135,6 +160,22 @@ public class TestMachine {
         }
     }
     
+    // EVENT
+    public void generateConnectedEvent(){
+        for (TestMachineListener packetListener : listeners){
+            packetListener.connectedEvent();
+        }
+    }
+    
+    // EVENT
+    public void generateDisconnectedEvent(){
+        for (TestMachineListener packetListener : listeners){
+            packetListener.disconnectedEvent();
+        }
+    }
+    
+    
+    
     public boolean isConnected(){
         return connected;
     }
@@ -180,6 +221,8 @@ public class TestMachine {
             String databasePassword,
             boolean autostart,
             boolean debug){
+        
+        // Saves properties
         Properties properties = new Properties();
         String propertiesPath = workingDirectory + File.separator + "TestMachine.conf";
         FileOutputStream out = null;
@@ -199,7 +242,6 @@ public class TestMachine {
                 Logger.getLogger(TestMachine.class.getName()).log(Level.SEVERE, null, ex1);
             }
         }
-        
         properties.setProperty("serialPort", serialPort);
         properties.setProperty("machine", machine);
         properties.setProperty("databaseServerName", databaseServerName);
@@ -207,9 +249,8 @@ public class TestMachine {
         properties.setProperty("databasePassword", databasePassword);
         Boolean autostartBoolean = autostart;
         properties.setProperty("autostart", autostartBoolean.toString());
-        Boolean debugtBoolean = debug;
-        properties.setProperty("debug", debugtBoolean.toString());
-        
+        Boolean debugBoolean = debug;
+        properties.setProperty("debug", debugBoolean.toString());
         try {
             properties.store(out, "---Config file for TestMachine application---");
             out.close();
@@ -217,6 +258,18 @@ public class TestMachine {
             Logger.getLogger(TestMachine.class.getName()).log(Level.SEVERE, null, ex);
             generateDisplayErrorEvent("Errore nel salvare le impostazioni.");
         }
+        
+        // Actually changes properties
+        this.serialPort = SerialPort.getCommPort(serialPort);
+        this.machine = machine;
+        this.databaseServerName = databaseServerName;
+        this.databaseUser = databaseUser;
+        this.databasePassword = databasePassword;
+        this.autostart = autostart;
+        this.debug = debug;
+        dataSource.setUser(databaseUser);
+        dataSource.setPassword(databasePassword);
+        dataSource.setServerName(databaseServerName);
     }
     
     public boolean newUser(String name, String surname, String username, String password){
@@ -299,6 +352,11 @@ public class TestMachine {
             if(sentPassword.equals(password)){
                 user = new User(sentName, sentSurname, sentUsername, sentAdmin, sentLoginID);
                 generateLoginOccurredEvent();
+                
+                // Since a login occurred, if autostart is enabled, the program starts
+                if (autostart) {
+                    connect();
+                }
                 return true;
             }
             else{
@@ -343,15 +401,28 @@ public class TestMachine {
             logger.log(Level.SEVERE, "Tento apertura porta seriale");
         }
         try {
-            serialPortJustStarted = true;
-            serialPort.openPort();
-            createSerialPortListener();
-            
-            if (debug){
-                logger.log(Level.SEVERE, "Apertura porta seriale riuscita");
-            }   
-            connected = true;
-            return true;
+            if(serialPort.openPort()){
+                serialPortJustStarted = true;
+                serialPort.openPort();
+                createSerialPortListener();
+
+                if (debug){
+                    logger.log(Level.SEVERE, "Apertura porta seriale riuscita");
+                }   
+                connected = true;
+                generateConnectedEvent();
+                return true;
+            }
+            else{
+                generateDisplayErrorEvent("Errore dalla porta seriale.");
+
+                if (debug) {
+                    logger.log(Level.SEVERE, "Apertura porta seriale non riuscita");
+                }
+                connected = false;
+                generateDisconnectedEvent();
+                return false;
+            }
         } catch (NullPointerException ex) {
             //connectButton.setText("null object returned!");
             logger.log(Level.SEVERE, null, ex);
@@ -363,6 +434,7 @@ public class TestMachine {
                 logger.log(Level.SEVERE, "Apertura porta seriale non riuscita");
             }
             connected = false;
+            generateDisconnectedEvent();
             return false;
         }
     }
@@ -376,6 +448,7 @@ public class TestMachine {
             //
         }
         connected = false;
+        generateDisconnectedEvent();
     }
     
     public void sendGoodToGoSignal() {

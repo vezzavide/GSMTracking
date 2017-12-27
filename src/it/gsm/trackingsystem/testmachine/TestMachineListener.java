@@ -18,4 +18,6 @@ public interface TestMachineListener {
     void normalStateEvent();
     void boardNotGoodEvent();
     void loginOccurredEvent(User user);
+    void connectedEvent();
+    void disconnectedEvent();
 }

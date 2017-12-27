@@ -86,7 +86,7 @@
                                   <Component id="databaseUserTextField" max="32767" attributes="0"/>
                                   <Component id="databaseServerNameTextField" max="32767" attributes="0"/>
                                   <Component id="machineTextField" max="32767" attributes="0"/>
-                                  <Component id="serialPortTextField" max="32767" attributes="0"/>
+                                  <Component id="serialPortComboBox" alignment="0" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                           <Group type="102" attributes="0">
@@ -94,7 +94,7 @@
                                   <Component id="autostartCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="debugCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="0" pref="173" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="164" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -107,7 +107,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="serialPortTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="serialPortComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -142,11 +142,6 @@
             <Component class="javax.swing.JLabel" name="jLabel1">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Porta seriale di default:"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="serialPortTextField">
-              <Properties>
-                <Property name="horizontalAlignment" type="int" value="4"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel2">
@@ -191,13 +186,26 @@
             </Component>
             <Component class="javax.swing.JCheckBox" name="autostartCheckBox">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Tentativo di autostart all&apos;avvio"/>
+                <Property name="text" type="java.lang.String" value="Autostart all&apos;avvio (se possibile)"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="debugCheckBox">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Debug"/>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="serialPortComboBox">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="0"/>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="popupMenuWillBecomeVisible" listener="javax.swing.event.PopupMenuListener" parameters="javax.swing.event.PopupMenuEvent" handler="serialPortComboBoxPopupMenuWillBecomeVisible"/>
+              </Events>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
             </Component>
           </SubComponents>
         </Container>

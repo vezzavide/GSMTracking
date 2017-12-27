@@ -5,22 +5,24 @@
  */
 package it.gsm.trackingsystem.testmachine;
 
+import com.fazecast.jSerialComm.SerialPort;
+
 /**
  *
  * @author abdhul
  */
 public class settingsFrame extends javax.swing.JFrame {
-    private TestMachineForm parentForm;
+    private javax.swing.JFrame parentForm;
     private TestMachine testMachine;
 
     /**
      * Creates new form settingsFrame
      */
-    public settingsFrame(TestMachineForm parentForm, TestMachine testMachine) {
+    public settingsFrame(javax.swing.JFrame parentForm, TestMachine testMachine) {
         initComponents();
         this.parentForm = parentForm;
         this.testMachine = testMachine;
-        //serialPortTextField.setText(testMachine.getSerialPort());
+        populateComboBox();
         machineTextField.setText(testMachine.getMachine());
         databaseServerNameTextField.setText(testMachine.getDatabaseServerName());
         databaseUserTextField.setText(testMachine.getDatabaseUser());
@@ -41,7 +43,6 @@ public class settingsFrame extends javax.swing.JFrame {
         jTabbedPane4 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        serialPortTextField = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         machineTextField = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -52,6 +53,7 @@ public class settingsFrame extends javax.swing.JFrame {
         databasePasswordTextField = new javax.swing.JTextField();
         autostartCheckBox = new javax.swing.JCheckBox();
         debugCheckBox = new javax.swing.JCheckBox();
+        serialPortComboBox = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
         applyButton = new javax.swing.JButton();
 
@@ -64,8 +66,6 @@ public class settingsFrame extends javax.swing.JFrame {
         });
 
         jLabel1.setText("Porta seriale di default:");
-
-        serialPortTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
         jLabel2.setText("Macchina:");
 
@@ -83,9 +83,19 @@ public class settingsFrame extends javax.swing.JFrame {
 
         databasePasswordTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
-        autostartCheckBox.setText("Tentativo di autostart all'avvio");
+        autostartCheckBox.setText("Autostart all'avvio (se possibile)");
 
         debugCheckBox.setText("Debug");
+
+        serialPortComboBox.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+                serialPortComboBoxPopupMenuWillBecomeVisible(evt);
+            }
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -107,12 +117,12 @@ public class settingsFrame extends javax.swing.JFrame {
                             .addComponent(databaseUserTextField)
                             .addComponent(databaseServerNameTextField)
                             .addComponent(machineTextField)
-                            .addComponent(serialPortTextField)))
+                            .addComponent(serialPortComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(autostartCheckBox)
                             .addComponent(debugCheckBox))
-                        .addGap(0, 173, Short.MAX_VALUE)))
+                        .addGap(0, 164, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -121,7 +131,7 @@ public class settingsFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(serialPortTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(serialPortComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -196,7 +206,7 @@ public class settingsFrame extends javax.swing.JFrame {
     private void applyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyButtonActionPerformed
         // TODO add your handling code here:
         testMachine.changeProperties(
-                serialPortTextField.getText(),
+                serialPortComboBox.getSelectedItem().toString(),
                 machineTextField.getText(),
                 databaseServerNameTextField.getText(),
                 databaseUserTextField.getText(),
@@ -204,13 +214,33 @@ public class settingsFrame extends javax.swing.JFrame {
                 autostartCheckBox.isSelected(),
                 debugCheckBox.isSelected());
         this.dispose();
-        
     }//GEN-LAST:event_applyButtonActionPerformed
 
+    private void populateComboBox(){
+        //Populate combobox with available serial ports
+        SerialPort[] ports = testMachine.getAvailableSerialPorts();
+        for (SerialPort port : ports) {
+            serialPortComboBox.addItem(port.getSystemPortName());
+        }
+        for (int i = 0; i < serialPortComboBox.getItemCount(); i++) {
+            if (serialPortComboBox.getItemAt(i).toString().equals(testMachine.getSerialPortString())) {
+                serialPortComboBox.setSelectedIndex(i);
+            }
+        }
+    }
+    
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         // TODO add your handling code here:
         parentForm.setEnabled(true);
     }//GEN-LAST:event_formWindowClosed
+
+    private void serialPortComboBoxPopupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_serialPortComboBoxPopupMenuWillBecomeVisible
+        // Empties combobox
+        for (int i = serialPortComboBox.getItemCount() - 1; i >= 0; i--){
+            serialPortComboBox.removeItemAt(i);
+        }
+        populateComboBox();
+    }//GEN-LAST:event_serialPortComboBoxPopupMenuWillBecomeVisible
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton applyButton;
@@ -228,6 +258,6 @@ public class settingsFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTabbedPane jTabbedPane4;
     private javax.swing.JTextField machineTextField;
-    private javax.swing.JTextField serialPortTextField;
+    private javax.swing.JComboBox<String> serialPortComboBox;
     // End of variables declaration//GEN-END:variables
 }

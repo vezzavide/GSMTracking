@@ -21,9 +21,6 @@ public class LoginFrame extends javax.swing.JFrame {
         this.parentForm = parentForm;
         this.testMachine = testMachine;
         initComponents();
-        databaseServerNameTextField.setText(testMachine.getDatabaseServerName());
-        machineTextField.setText(testMachine.getMachine());
-        newUserDatabaseServerNameTextField.setText(testMachine.getDatabaseServerName());
     }
 
     /**
@@ -46,8 +43,6 @@ public class LoginFrame extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         newPasswordTextField = new javax.swing.JTextField();
         sendNewUserToDatabaseButton = new javax.swing.JButton();
-        jLabel11 = new javax.swing.JLabel();
-        newUserDatabaseServerNameTextField = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -55,10 +50,9 @@ public class LoginFrame extends javax.swing.JFrame {
         passwordTextField = new javax.swing.JTextField();
         loginButton = new javax.swing.JButton();
         newUserButton = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
-        databaseServerNameTextField = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        machineTextField = new javax.swing.JTextField();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        settingsMenuItem = new javax.swing.JMenuItem();
 
         newUserFrame.setTitle("Tracking System - Nuovo utente");
         newUserFrame.setResizable(false);
@@ -86,8 +80,6 @@ public class LoginFrame extends javax.swing.JFrame {
             }
         });
 
-        jLabel11.setText("Server:");
-
         javax.swing.GroupLayout newUserFrameLayout = new javax.swing.GroupLayout(newUserFrame.getContentPane());
         newUserFrame.getContentPane().setLayout(newUserFrameLayout);
         newUserFrameLayout.setHorizontalGroup(
@@ -95,7 +87,7 @@ public class LoginFrame extends javax.swing.JFrame {
             .addGroup(newUserFrameLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(newUserFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, newUserFrameLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(sendNewUserToDatabaseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -104,11 +96,9 @@ public class LoginFrame extends javax.swing.JFrame {
                             .addComponent(jLabel8)
                             .addComponent(jLabel7)
                             .addComponent(jLabel9)
-                            .addComponent(jLabel10)
-                            .addComponent(jLabel11))
+                            .addComponent(jLabel10))
                         .addGap(15, 15, 15)
                         .addGroup(newUserFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(newUserDatabaseServerNameTextField)
                             .addComponent(newUsernameTextField)
                             .addComponent(newNameTextField)
                             .addComponent(newSurnameTextField)
@@ -136,10 +126,6 @@ public class LoginFrame extends javax.swing.JFrame {
                 .addGroup(newUserFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
                     .addComponent(newPasswordTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(newUserFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(newUserDatabaseServerNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel11))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
                 .addComponent(sendNewUserToDatabaseButton)
                 .addContainerGap())
@@ -170,9 +156,19 @@ public class LoginFrame extends javax.swing.JFrame {
             }
         });
 
-        jLabel4.setText("Server");
+        jMenu1.setText("Impostazioni");
 
-        jLabel5.setText("Macchina");
+        settingsMenuItem.setText("Impostazioni");
+        settingsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                settingsMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(settingsMenuItem);
+
+        jMenuBar1.add(jMenu1);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -186,14 +182,6 @@ public class LoginFrame extends javax.swing.JFrame {
                         .addComponent(newUserButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
                         .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addGap(112, 133, Short.MAX_VALUE)
-                        .addComponent(databaseServerNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(machineTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -211,21 +199,13 @@ public class LoginFrame extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(databaseServerNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel2)
+                    .addComponent(usernameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(machineTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(usernameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(passwordTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                    .addComponent(jLabel3)
+                    .addComponent(passwordTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(newUserButton)
                     .addComponent(loginButton))
@@ -237,7 +217,7 @@ public class LoginFrame extends javax.swing.JFrame {
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
         //parentForm.setVisible(true);
-        if (testMachine.login(usernameTextField.getText(), passwordTextField.getText(), databaseServerNameTextField.getText(), machineTextField.getText())){
+        if (testMachine.login(usernameTextField.getText(), passwordTextField.getText())){
             parentForm.setVisible(true);
             this.dispose();
         }
@@ -252,8 +232,7 @@ public class LoginFrame extends javax.swing.JFrame {
 
     private void sendNewUserToDatabaseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendNewUserToDatabaseButtonActionPerformed
         // TODO add your handling code here:
-        if(testMachine.newUser(newNameTextField.getText(), newSurnameTextField.getText(), newUsernameTextField.getText(), newPasswordTextField.getText(), newUserDatabaseServerNameTextField.getText())){
-            databaseServerNameTextField.setText(newUserDatabaseServerNameTextField.getText());
+        if(testMachine.newUser(newNameTextField.getText(), newSurnameTextField.getText(), newUsernameTextField.getText(), newPasswordTextField.getText())){
             usernameTextField.setText(newUsernameTextField.getText());
             passwordTextField.setText(newPasswordTextField.getText());
             newUserFrame.dispose();
@@ -266,31 +245,33 @@ public class LoginFrame extends javax.swing.JFrame {
         this.setEnabled(true);
     }//GEN-LAST:event_newUserFrameWindowClosing
 
+    private void settingsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_settingsMenuItemActionPerformed
+        this.setEnabled(false);
+        new settingsFrame(this, testMachine).setVisible(true);
+    }//GEN-LAST:event_settingsMenuItemActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField databaseServerNameTextField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JButton loginButton;
-    private javax.swing.JTextField machineTextField;
     private javax.swing.JTextField newNameTextField;
     private javax.swing.JTextField newPasswordTextField;
     private javax.swing.JTextField newSurnameTextField;
     private javax.swing.JButton newUserButton;
-    private javax.swing.JTextField newUserDatabaseServerNameTextField;
     private javax.swing.JFrame newUserFrame;
     private javax.swing.JTextField newUsernameTextField;
     private javax.swing.JTextField passwordTextField;
     private javax.swing.JButton sendNewUserToDatabaseButton;
+    private javax.swing.JMenuItem settingsMenuItem;
     private javax.swing.JTextField usernameTextField;
     // End of variables declaration//GEN-END:variables
 }
