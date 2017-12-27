@@ -38,7 +38,6 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
         // so that TestMachine can send events to TestMachineForm
         testMachine.addListener(this);
         initComponents();
-        populateComboBox();
         
         try {
             fileHandler = new FileHandler(workingDirectory + File.separator + "test_machine_GUI_errors.log", true);
@@ -152,21 +151,23 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
         currentUserLabel.setText("Operatore corrente: " + user.getSurname() + " " + user.getName() + " ");
     }
     
-    private void populateComboBox(){
-        //Populate combobox with available serial ports
-        SerialPort[] ports = testMachine.getAvailableSerialPorts();
-        for(int i = 0; i < ports.length; i++){
-            serialPortComboBox.addItem(ports[i].getSystemPortName());
-        }
+    @Override
+    public void connectedEvent(){
+        connectButton.setText("Stop");
+        connectButton.setBackground(Color.RED);
+        programStateLabel.setText(" Stato programma: ATTIVO ");
+        programStateLabel.setForeground(null);
     }
     
-    private SerialPort getSelectedSerialPort(){
-        for(SerialPort port : SerialPort.getCommPorts()){
-            if (port.getSystemPortName().equals(serialPortComboBox.getSelectedItem().toString())){
-                return port;
-            }
-        }
-        return null;
+    @Override
+    public void disconnectedEvent(){
+        connectButton.setText("Start");
+        connectButton.setBackground(Color.GREEN);
+        goodToGoButton.setEnabled(false);
+        reScanButton.setEnabled(false);
+        programStateLabel.setText(" Stato programma: SPENTO ");
+        programStateLabel.setForeground(Color.red);
+        
     }
     
     // Shortens the terminal so that it won't ever be bigger
@@ -196,7 +197,6 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
         okButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         errorTextArea = new javax.swing.JTextArea();
-        serialPortComboBox = new javax.swing.JComboBox<>();
         connectButton = new javax.swing.JButton();
         reScanButton = new javax.swing.JButton();
         goodToGoButton = new javax.swing.JButton();
@@ -205,6 +205,7 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
         testOutcomeTextField = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         currentUserLabel = new javax.swing.JLabel();
+        programStateLabel = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         logoutMenuItem = new javax.swing.JMenuItem();
@@ -298,6 +299,9 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
         currentUserLabel.setText("Operatore corrente:");
         currentUserLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
+        programStateLabel.setText(" Stato programma: SPENTO ");
+        programStateLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
         jMenu1.setText("Operatore");
 
         logoutMenuItem.setText("Logout");
@@ -333,9 +337,9 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(currentUserLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(serialPortComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(connectButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(programStateLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(reScanButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -357,10 +361,10 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(serialPortComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(connectButton)
                     .addComponent(reScanButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(goodToGoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(goodToGoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(programStateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -387,20 +391,11 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
     private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
         // Connect to port
         if(connectButton.getText().equals("Start")){
-            if(testMachine.connect(getSelectedSerialPort())){
-                connectButton.setText("Stop");
-                connectButton.setBackground(Color.RED);
-                serialPortComboBox.setEnabled(false);
-            }
+            testMachine.connect();
         }
         // Disconnect to port
         else{
             testMachine.disconnect();
-            connectButton.setText("Start");
-            connectButton.setBackground(Color.GREEN);
-            serialPortComboBox.setEnabled(true);
-            goodToGoButton.setEnabled(false);
-            reScanButton.setEnabled(false);
         }
         
     }//GEN-LAST:event_connectButtonActionPerformed
@@ -427,7 +422,6 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
         testMachine.disconnect();
         connectButton.setText("Start");
         connectButton.setBackground(Color.GREEN);
-        serialPortComboBox.setEnabled(true);
         goodToGoButton.setEnabled(false);
         reScanButton.setEnabled(false);
         this.setVisible(false);
@@ -436,7 +430,6 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
 
     private void settingsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_settingsMenuItemActionPerformed
         // TODO add your handling code here:
-        System.out.println(testMachine.isConnected());
         if (!testMachine.isConnected()){
             this.setEnabled(false);
             new settingsFrame(this, testMachine).setVisible(true);
@@ -498,8 +491,8 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JMenuItem logoutMenuItem;
     private javax.swing.JButton okButton;
+    private javax.swing.JLabel programStateLabel;
     private javax.swing.JButton reScanButton;
-    private javax.swing.JComboBox<String> serialPortComboBox;
     private javax.swing.JMenuItem settingsMenuItem;
     private javax.swing.JTextField testOutcomeTextField;
     // End of variables declaration//GEN-END:variables
