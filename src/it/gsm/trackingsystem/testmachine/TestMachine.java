@@ -75,7 +75,7 @@ public class TestMachine {
             properties.load(in);
             in.close();
             serialPort = SerialPort.getCommPort(properties.getProperty("serialPort", null));
-            System.out.println("porta scelta: " + serialPort.getSystemPortName());
+            //System.out.println("porta scelta: " + serialPort.getSystemPortName());
             machine = properties.getProperty("machine");
             databaseServerName = properties.getProperty("databaseServerName");
             databaseUser = properties.getProperty("databaseUser");
@@ -414,6 +414,7 @@ public class TestMachine {
                 return true;
             }
             else{
+                //System.out.println("No porta presente");
                 generateDisplayErrorEvent("Errore dalla porta seriale.");
 
                 if (debug) {

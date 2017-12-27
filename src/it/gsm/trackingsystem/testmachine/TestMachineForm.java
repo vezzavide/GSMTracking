@@ -149,6 +149,7 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
     @Override
     public void loginOccurredEvent(User user){
         currentUserLabel.setText("Operatore corrente: " + user.getSurname() + " " + user.getName() + " ");
+        setVisible(true);
     }
     
     @Override

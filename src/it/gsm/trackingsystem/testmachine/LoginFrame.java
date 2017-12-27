@@ -218,7 +218,7 @@ public class LoginFrame extends javax.swing.JFrame {
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
         //parentForm.setVisible(true);
         if (testMachine.login(usernameTextField.getText(), passwordTextField.getText())){
-            parentForm.setVisible(true);
+            //parentForm.setVisible(true);
             this.dispose();
         }
     }//GEN-LAST:event_loginButtonActionPerformed
