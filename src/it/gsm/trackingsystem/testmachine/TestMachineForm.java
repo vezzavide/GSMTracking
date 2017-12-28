@@ -75,7 +75,7 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
         goodToGoButton.setEnabled(true);
         reScanButton.setEnabled(true);
         
-        boardTextField.setText("Errore da Arduino");
+        boardTextField.setText("Errore");
         testOutcomeTextField.setText("");
         testOutcomeTextField.setBackground(null);
         
@@ -171,6 +171,7 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
         programStateLabel.setText("Stato: SPENTO");
         boardTextField.setText("");
         testOutcomeTextField.setText("");
+        serverStateTextField.setText("");
         testOutcomeTextField.setBackground(null);
         this.pack();
     }
@@ -190,6 +191,30 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
     public void logoutScheduledEvent(String logout){
         nextLogoutLabel.setText("Prossimo logout: " + logout);
         this.pack();
+    }
+    
+    // Server state:
+    //  1: data sent and waiting for confirmation
+    //  2: everything went alright
+    //  3: error from server
+    @Override
+    public void serverStateEvent(int serverState){
+        switch (serverState){
+            // Data sent and waiting for confirmation
+            case 1:
+                serverStateTextField.setText("Aspetto conferma...");
+                break;
+            
+            // Confirmation received
+            case 2:
+                serverStateTextField.setText("Dato inviato");
+                break;
+            
+            // Error from server
+            case 3:
+                serverStateTextField.setText("Errore dal server");
+                break;
+        }
     }
     
     // Shortens the terminal so that it won't ever be bigger
@@ -228,6 +253,8 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
         jSeparator2 = new javax.swing.JSeparator();
         nextLogoutLabel = new javax.swing.JLabel();
         jSeparator3 = new javax.swing.JSeparator();
+        serverStateTextField = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         logoutMenuItem = new javax.swing.JMenuItem();
@@ -274,6 +301,8 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
 
         jLabel2.setText("Ultima scheda:");
 
+        testOutcomeTextField.setEditable(false);
+
         jLabel3.setText("Esito test:");
 
         currentUserLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -286,6 +315,10 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
         nextLogoutLabel.setText("Prossimo logout:");
 
         jSeparator3.setOrientation(javax.swing.SwingConstants.VERTICAL);
+
+        serverStateTextField.setEditable(false);
+
+        jLabel1.setText("Dialogo server:");
 
         jMenu1.setText("Operatore");
 
@@ -328,16 +361,6 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(goodToGoButton))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(boardTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addGap(0, 12, Short.MAX_VALUE))
-                            .addComponent(testOutcomeTextField)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(programStateLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -347,7 +370,21 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(currentUserLabel)))
+                        .addComponent(currentUserLabel))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(boardTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(testOutcomeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(0, 80, Short.MAX_VALUE))
+                            .addComponent(serverStateTextField))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -360,13 +397,15 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
                     .addComponent(reScanButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
                     .addComponent(jLabel2)
-                    .addComponent(jLabel3))
+                    .addComponent(jLabel1))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(boardTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(serverStateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(testOutcomeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(23, 23, 23)
                         .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -484,6 +523,7 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
     private javax.swing.JButton connectButton;
     private javax.swing.JLabel currentUserLabel;
     private javax.swing.JButton goodToGoButton;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JMenu jMenu1;
@@ -496,6 +536,7 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
     private javax.swing.JLabel nextLogoutLabel;
     private javax.swing.JLabel programStateLabel;
     private javax.swing.JButton reScanButton;
+    private javax.swing.JTextField serverStateTextField;
     private javax.swing.JMenuItem settingsMenuItem;
     private javax.swing.JTextField testOutcomeTextField;
     // End of variables declaration//GEN-END:variables

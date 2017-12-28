@@ -22,4 +22,9 @@ public interface TestMachineListener {
     void disconnectedEvent();
     void logoutOccurredEvent();
     void logoutScheduledEvent(String logout);
+    // Server state:
+    //  1: data sent and waiting for confirmation
+    //  2: everything went alright
+    //  3: error from server
+    void serverStateEvent(int serverState);
 }

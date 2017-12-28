@@ -191,9 +191,17 @@ public class TestMachine {
         }
     }
     
+    // EVENT
     public void generateLogoutScheduledEvent(String logout){
         for (TestMachineListener packetListener : listeners){
             packetListener.logoutScheduledEvent(logout);
+        }
+    }
+    
+    // EVENT
+    public void generateServerStateEvent(int serverState){
+        for (TestMachineListener packetListener : listeners){
+            packetListener.serverStateEvent(serverState);
         }
     }
     
@@ -729,6 +737,8 @@ public class TestMachine {
         if (debug){
             logger.log(Level.SEVERE, "Comincio l'operazione di invio pacchetto al DB");
         }
+        // Signals that we start the insert to server
+        generateServerStateEvent(1);
         try {
             Connection conn = dataSource.getConnection();
             Statement statement = conn.createStatement();
@@ -777,6 +787,8 @@ public class TestMachine {
             if (debug){
                 logger.log(Level.SEVERE, "Test inviato al DB con successo");
             }
+            // Signals that everything went alright
+            generateServerStateEvent(2);
             return true;
 
         }catch (SQLException ex) {
@@ -787,7 +799,10 @@ public class TestMachine {
             generateDisplayErrorEvent("Errore dal server: "
                                     + System.lineSeparator()
                                     + ex.toString());
+            // Signals that there has been an error
             generateErrorStateEvent();
+            // Signals that something went wrong with the server
+            generateServerStateEvent(3);
             return false;
         }
     }
@@ -850,7 +865,7 @@ public class TestMachine {
                                 if (debug){
                                     logger.log(Level.SEVERE, "l'invio pacchetto al DB  non è andato a buon fine, invio segnale di rescan");
                                 }
-                                sendReScanSignal();
+                                //sendReScanSignal();
                             }
                             if (debug){
                                 logger.log(Level.SEVERE, "Ho finito di leggere il data packet");
@@ -859,7 +874,6 @@ public class TestMachine {
                         else{
                             if (debug){
                                 logger.log(Level.SEVERE, "Timeout di lettura pacchetto dati, riscansiono");
-                                
                             }
                             sendReScanSignal();
                         }
