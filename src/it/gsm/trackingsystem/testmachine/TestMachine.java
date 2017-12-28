@@ -578,94 +578,109 @@ public class TestMachine {
     }
     
     private boolean readDataPacketInBlockingMode(){
-        if (debug){
-            logger.log(Level.SEVERE, "Inizio lettura data packet");
-        }
-        // reset error counter in case there have actually been errors
-        errorRecoveryAttemptsCounter = 0;
-        // Starts timer for readign timeout
-        long startReadingTime = System.currentTimeMillis();
-        if (debug){
-            logger.log(Level.SEVERE, "Comincio ad aspettare che siano ricevuti 27 byte");
-        }
-        while(serialPort.bytesAvailable() < 27){
-            /*wait for whole packet to be received:
-                - 1 TAB;
-                - 24 characters (code);
-                - 1 TAB;
-                - 1 character for goodOrNot;
-                    TOT: 27 bytes
-            */
-            if((System.currentTimeMillis() - startReadingTime) > readTimeOut){
-                if (debug){
-                    logger.log(Level.SEVERE, "Timeout data packet scaduto, non ho ricevuto abbastanza dati");
+        try{
+            if (debug){
+                logger.log(Level.SEVERE, "Inizio lettura data packet");
+            }
+            // reset error counter in case there have actually been errors
+            errorRecoveryAttemptsCounter = 0;
+            // Starts timer for readign timeout
+            long startReadingTime = System.currentTimeMillis();
+            if (debug){
+                logger.log(Level.SEVERE, "Comincio ad aspettare che siano ricevuti 27 byte");
+            }
+            while(serialPort.bytesAvailable() < 27){
+                /*wait for whole packet to be received:
+                    - 1 TAB;
+                    - 24 characters (code);
+                    - 1 TAB;
+                    - 1 character for goodOrNot;
+                        TOT: 27 bytes
+                */
+                if((System.currentTimeMillis() - startReadingTime) > readTimeOut){
+                    if (debug){
+                        logger.log(Level.SEVERE, "Timeout data packet scaduto, non ho ricevuto abbastanza dati");
+                    }
+                    return false;
                 }
+            }
+            if (debug){
+                logger.log(Level.SEVERE, "Ho ricevuto almeno 27 byte");
+            }
+            currentBoard = new Board();
+            byte[] byteCharacter = new byte[27];
+            serialPort.readBytes(byteCharacter, 27);
+            String packet = new String(byteCharacter);
+            for (int i = 1; i <= 24; i++){
+                currentBoard.append(packet.charAt(i));
+            }
+            if (packet.charAt(26) == '0'){
+                currentBoard.setGood(false);
+            } else{
+                currentBoard.setGood(true);
+            }
+            //updatePacketGUI();
+            generateDataPacketReceivedEvent(currentBoard);
+            if (debug){
+                logger.log(Level.SEVERE, "Ho finito di leggere il data packet. la scheda ricevuta è: " + currentBoard.getCode());
+            }
+            if (currentBoard.check()){
+                generateDataPacketReceivedEvent(currentBoard);
+                return true;
+            }
+            else{
                 return false;
             }
         }
-        if (debug){
-            logger.log(Level.SEVERE, "Ho ricevuto almeno 27 byte");
-        }
-        currentBoard = new Board();
-        byte[] byteCharacter = new byte[27];
-        serialPort.readBytes(byteCharacter, 27);
-        String packet = new String(byteCharacter);
-        for (int i = 1; i <= 24; i++){
-            currentBoard.append(packet.charAt(i));
-        }
-        if (packet.charAt(26) == '0'){
-            currentBoard.setGood(false);
-        } else{
-            currentBoard.setGood(true);
-        }
-        //updatePacketGUI();
-        generateDataPacketReceivedEvent(currentBoard);
-        if (debug){
-            logger.log(Level.SEVERE, "Ho finito di leggere il data packet. la scheda ricevuta è: " + currentBoard.getCode());
-        }
-        if (currentBoard.check()){
-            generateDataPacketReceivedEvent(currentBoard);
-            return true;
-        }
-        else{
+        catch(Exception ex){
+            logger.log(Level.SEVERE, null, ex);
+            if (debug){
+                logger.log(Level.SEVERE, "Si è verificata una eccezione mentre ricevevo e leggevo il datapacket");
+            }
             return false;
         }
     }
     
     private Integer readErrorPacketInBlockingMode(){
-        if (debug){
-            logger.log(Level.SEVERE, "Comincio a leggere l'error packet");
-        }
-        long startReadingTime = System.currentTimeMillis();
-        if (debug){
-            logger.log(Level.SEVERE, "Comincio ad aspettare che siano ricevuto 2 byte");
-        }
-        while(serialPort.bytesAvailable() < 2){
-            // Just wait for whole errore paket to be received:
-            //      - 1 TAB
-            //      - 1 char (error code)
-            //          TOT: 2 bytes
-            
-            if((System.currentTimeMillis() - startReadingTime) > readTimeOut){
-                if (debug){
-                    logger.log(Level.SEVERE, "Timeout error packet scaduto, non ho ricevuto abbastanza dati");
-                }
-                return null;
+        try{
+            if (debug){
+                logger.log(Level.SEVERE, "Comincio a leggere l'error packet");
             }
+            long startReadingTime = System.currentTimeMillis();
+            if (debug){
+                logger.log(Level.SEVERE, "Comincio ad aspettare che siano ricevuto 2 byte");
+            }
+            while(serialPort.bytesAvailable() < 2){
+                // Just wait for whole errore paket to be received:
+                //      - 1 TAB
+                //      - 1 char (error code)
+                //          TOT: 2 bytes
+
+                if((System.currentTimeMillis() - startReadingTime) > readTimeOut){
+                    if (debug){
+                        logger.log(Level.SEVERE, "Timeout error packet scaduto, non ho ricevuto abbastanza dati");
+                    }
+                    return null;
+                }
+            }
+            if (debug){
+                logger.log(Level.SEVERE, "Sono stati ricevuti abbastanza dati");
+            }
+            byte[] byteCharacter = new byte[2];
+            serialPort.readBytes(byteCharacter, 2);
+            Character character = (char)byteCharacter[1];
+            String error = character.toString();
+            int errorCode = Integer.parseInt(error);
+            //System.out.println("Errore da Arduino: codice " + error);
+            if (debug){
+                logger.log(Level.SEVERE, "Ho finito di ricevere l'error packet, errore " + error);
+            }
+            return errorCode;
         }
-        if (debug){
-            logger.log(Level.SEVERE, "Sono stati ricevuti abbastanza dati");
+        catch(Exception ex){
+            logger.log(Level.SEVERE, null, ex);
+            return null;
         }
-        byte[] byteCharacter = new byte[2];
-        serialPort.readBytes(byteCharacter, 2);
-        Character character = (char)byteCharacter[1];
-        String error = character.toString();
-        int errorCode = Integer.parseInt(error);
-        //System.out.println("Errore da Arduino: codice " + error);
-        if (debug){
-            logger.log(Level.SEVERE, "Ho finito di ricevere l'error packet, errore " + error);
-        }
-        return errorCode;
     }
     
     private void handleArduinoError(int errorCode){
@@ -873,7 +888,7 @@ public class TestMachine {
                         }
                         else{
                             if (debug){
-                                logger.log(Level.SEVERE, "Timeout di lettura pacchetto dati, riscansiono");
+                                logger.log(Level.SEVERE, "lettura pacchetto dati ha ritornato null");
                             }
                             sendReScanSignal();
                         }
@@ -892,6 +907,9 @@ public class TestMachine {
                         Integer errorCode = readErrorPacketInBlockingMode();
                         // check if timeout occurred
                         if (errorCode == null){
+                            if (debug) {
+                                logger.log(Level.SEVERE, "Errore di ricezione error packet, riscansiono");
+                            }
                             sendReScanSignal();
                             break;
                         }
