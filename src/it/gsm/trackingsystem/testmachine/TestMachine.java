@@ -551,7 +551,12 @@ public class TestMachine {
         } catch (NullPointerException ex) {
             //
         }
+        
+        // Resets state variables
         connected = false;
+        errorState = false;
+        readyToGoodToGoSignal = false;
+        serialPortJustStarted = false;
         generateDisconnectedEvent();
     }
     
