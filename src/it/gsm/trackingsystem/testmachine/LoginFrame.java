@@ -5,6 +5,8 @@
  */
 package it.gsm.trackingsystem.testmachine;
 
+import javax.swing.ImageIcon;
+
 
 /**
  *
@@ -18,6 +20,9 @@ public class LoginFrame extends javax.swing.JFrame {
      * Creates new form LoginFrame
      */
     public LoginFrame(TestMachineForm parentForm, TestMachine testMachine) {
+        // Sets icon
+        ImageIcon icon = new ImageIcon(getClass().getResource("/it/gsm/trackingsystem/testmachine/favicon.png"));
+        setIconImage(icon.getImage());
         this.parentForm = parentForm;
         this.testMachine = testMachine;
         initComponents();

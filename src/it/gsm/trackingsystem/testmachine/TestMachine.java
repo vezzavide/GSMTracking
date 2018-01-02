@@ -336,23 +336,27 @@ public class TestMachine {
                 }
             }
             
-            nextLogoutString = nextLogout.toString();
-            
-            // Creates a LocalDateTime for next logout
-            LocalDateTime nextLogoutDateTime = nextLogout.atDate(LocalDate.now());
-            // Converts LocalDateTime to date (from java.util), since Timer.schedule supports Date only
-            Date nextLogoutDate = Date.from(nextLogoutDateTime.atZone(ZoneId.systemDefault()).toInstant());
-            
-            // At this point, nextLogoutDate is the nearest future logout in the list
-            logoutTimer.schedule(
-                new TimerTask() {
-                    @Override
-                    public void run() {
-                        logout();
-                        logoutTimer.cancel();
-                    }
-                },
-                nextLogoutDate);
+            if(nextLogout == LocalTime.MAX){
+                nextLogoutString = "nessuno";
+            }
+            else{
+                // Creates a LocalDateTime for next logout
+                LocalDateTime nextLogoutDateTime = nextLogout.atDate(LocalDate.now());
+                // Converts LocalDateTime to date (from java.util), since Timer.schedule supports Date only
+                Date nextLogoutDate = Date.from(nextLogoutDateTime.atZone(ZoneId.systemDefault()).toInstant());
+
+                // At this point, nextLogoutDate is the nearest future logout in the list
+                logoutTimer.schedule(
+                    new TimerTask() {
+                        @Override
+                        public void run() {
+                            logout();
+                            logoutTimer.cancel();
+                        }
+                    },
+                    nextLogoutDate);
+                nextLogoutString = nextLogout.toString();
+            }
         }
         else{
             nextLogoutString = "nessuno";

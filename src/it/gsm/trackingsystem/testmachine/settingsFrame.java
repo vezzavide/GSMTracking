@@ -10,6 +10,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import java.util.*;
 import java.time.*;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -23,6 +24,9 @@ public class settingsFrame extends javax.swing.JFrame {
      * Creates new form settingsFrame
      */
     public settingsFrame(javax.swing.JFrame parentForm, TestMachine testMachine) {
+        // Sets icon
+        ImageIcon icon = new ImageIcon(getClass().getResource("/it/gsm/trackingsystem/testmachine/favicon.png"));
+        setIconImage(icon.getImage());
         initComponents();
         this.parentForm = parentForm;
         this.testMachine = testMachine;

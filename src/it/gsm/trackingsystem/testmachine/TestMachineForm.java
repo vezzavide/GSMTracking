@@ -15,6 +15,7 @@ import java.util.logging.FileHandler;
 import javax.swing.text.BadLocationException;
 import javax.swing.Timer;
 import java.io.File;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 /**
  *
@@ -32,8 +33,12 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
      * Creates new form TestMachine
      */
     public TestMachineForm(){
+        // Sets logger
         System.out.println(System.getProperty("user.dir"));
         logger = Logger.getLogger(TestMachineForm.class.getName());
+        // Sets icon
+        ImageIcon icon = new ImageIcon(getClass().getResource("/it/gsm/trackingsystem/testmachine/favicon.png"));
+        setIconImage(icon.getImage());
         // Creates application
         testMachine = new TestMachine();
         // Add this instance of TestMachineForm to TestMachine listeners
@@ -43,6 +48,7 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
         
         try {
             fileHandler = new FileHandler(workingDirectory + File.separator + "test_machine_GUI_errors.log", true);
+            
             logger.addHandler(fileHandler);
         } catch (IOException | SecurityException ex) {
             Logger.getLogger(TestMachineForm.class.getName()).log(Level.SEVERE, null, ex);
