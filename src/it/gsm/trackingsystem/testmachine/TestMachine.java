@@ -327,25 +327,38 @@ public class TestMachine {
             logoutTimer = new Timer();
             // Initializes nextLogout with maximum value
             LocalTime nextLogout = LocalTime.MAX;
+            LocalTime nextTomorrowLogout = scheduledLogouts.get(0);
             LocalTime now = LocalTime.now();
             for (int i = 0; i < scheduledLogouts.size(); i++) {
                 // Selects just future logouts
                 LocalTime logout = scheduledLogouts.get(i);
+                // Finds the next logout of today
                 if (logout.isAfter(now) && logout.isBefore(nextLogout)) {
                     nextLogout = logout;
                 }
+                if (logout.isBefore(nextTomorrowLogout)){
+                    nextTomorrowLogout = logout;
+                }
             }
             
+            Date nextLogoutDate;
+            // The next logout is tomorrow at nextTomorrowLogout hours
             if(nextLogout == LocalTime.MAX){
-                nextLogoutString = "nessuno";
+                // Creates a LocalDateTime for next logout (of tomorrow)
+                LocalDateTime nextLogoutDateTime = nextTomorrowLogout.atDate(LocalDate.now().plusDays(1));
+                // Converts LocalDateTime to date (from java.util), since Timer.schedule supports Date only
+                nextLogoutDate = Date.from(nextLogoutDateTime.atZone(ZoneId.systemDefault()).toInstant());
+                nextLogoutString = "domani alle " + nextTomorrowLogout.toString();
             }
+            // The next logout is today at nextLogout hours
             else{
                 // Creates a LocalDateTime for next logout
                 LocalDateTime nextLogoutDateTime = nextLogout.atDate(LocalDate.now());
                 // Converts LocalDateTime to date (from java.util), since Timer.schedule supports Date only
-                Date nextLogoutDate = Date.from(nextLogoutDateTime.atZone(ZoneId.systemDefault()).toInstant());
-
-                // At this point, nextLogoutDate is the nearest future logout in the list
+                nextLogoutDate = Date.from(nextLogoutDateTime.atZone(ZoneId.systemDefault()).toInstant());
+                nextLogoutString = nextLogout.toString();
+            }
+            // At this point, nextLogoutDate is the nearest future logout in the list
                 logoutTimer.schedule(
                     new TimerTask() {
                         @Override
@@ -355,8 +368,7 @@ public class TestMachine {
                         }
                     },
                     nextLogoutDate);
-                nextLogoutString = nextLogout.toString();
-            }
+                //nextLogoutString = nextLogout.toString();
         }
         else{
             nextLogoutString = "nessuno";
