@@ -83,7 +83,7 @@ public class TestMachine {
             autostart = Boolean.valueOf(properties.getProperty("autostart", "True"));
             debug = Boolean.valueOf(properties.getProperty("debug", "False"));
             
-            String scheduledLogoutsString = properties.getProperty("scheduledLogouts");
+            String scheduledLogoutsString = properties.getProperty("scheduledLogouts", "");
             if(!scheduledLogoutsString.equals("")){
                 String[] logoutsSplit = scheduledLogoutsString.split("#");
                 List<LocalTime> scheduledLogouts = new ArrayList<>();
