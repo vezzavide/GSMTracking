@@ -82,11 +82,11 @@
                               </Group>
                               <EmptySpace max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="databasePasswordTextField" pref="153" max="32767" attributes="0"/>
+                                  <Component id="databasePasswordTextField" max="32767" attributes="0"/>
                                   <Component id="databaseUserTextField" max="32767" attributes="0"/>
                                   <Component id="databaseServerNameTextField" max="32767" attributes="0"/>
-                                  <Component id="machineTextField" max="32767" attributes="0"/>
-                                  <Component id="serialPortComboBox" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="serialPortComboBox" alignment="0" pref="172" max="32767" attributes="0"/>
+                                  <Component id="machineTextField" alignment="1" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                           <Group type="102" attributes="0">
@@ -149,11 +149,6 @@
                 <Property name="text" type="java.lang.String" value="Macchina:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="machineTextField">
-              <Properties>
-                <Property name="horizontalAlignment" type="int" value="4"/>
-              </Properties>
-            </Component>
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Indirizzo server MySQL:"/>
@@ -206,6 +201,11 @@
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
+            </Component>
+            <Component class="javax.swing.JTextField" name="machineTextField">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="4"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>

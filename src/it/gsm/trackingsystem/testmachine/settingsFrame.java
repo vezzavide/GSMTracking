@@ -30,7 +30,7 @@ public class settingsFrame extends javax.swing.JFrame {
         initComponents();
         this.parentForm = parentForm;
         this.testMachine = testMachine;
-        populateComboBox();
+        populateSerialPortComboBox();
         machineTextField.setText(testMachine.getMachine());
         databaseServerNameTextField.setText(testMachine.getDatabaseServerName());
         databaseUserTextField.setText(testMachine.getDatabaseUser());
@@ -59,7 +59,6 @@ public class settingsFrame extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        machineTextField = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         databaseServerNameTextField = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
@@ -69,6 +68,7 @@ public class settingsFrame extends javax.swing.JFrame {
         autostartCheckBox = new javax.swing.JCheckBox();
         debugCheckBox = new javax.swing.JCheckBox();
         serialPortComboBox = new javax.swing.JComboBox<>();
+        machineTextField = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         addScheduledLogoutButton = new javax.swing.JButton();
         deleteScheduledLogoutButton = new javax.swing.JButton();
@@ -87,8 +87,6 @@ public class settingsFrame extends javax.swing.JFrame {
         jLabel1.setText("Porta seriale di default:");
 
         jLabel2.setText("Macchina:");
-
-        machineTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
         jLabel3.setText("Indirizzo server MySQL:");
 
@@ -116,6 +114,8 @@ public class settingsFrame extends javax.swing.JFrame {
             }
         });
 
+        machineTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -132,11 +132,11 @@ public class settingsFrame extends javax.swing.JFrame {
                             .addComponent(jLabel5))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(databasePasswordTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
+                            .addComponent(databasePasswordTextField)
                             .addComponent(databaseUserTextField)
                             .addComponent(databaseServerNameTextField)
-                            .addComponent(machineTextField)
-                            .addComponent(serialPortComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(serialPortComboBox, 0, 172, Short.MAX_VALUE)
+                            .addComponent(machineTextField, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(autostartCheckBox)
@@ -286,7 +286,7 @@ public class settingsFrame extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_applyButtonActionPerformed
 
-    private void populateComboBox(){
+    private void populateSerialPortComboBox(){
         //Populate combobox with available serial ports
         SerialPort[] ports = testMachine.getAvailableSerialPorts();
         for (SerialPort port : ports) {
@@ -309,7 +309,7 @@ public class settingsFrame extends javax.swing.JFrame {
         for (int i = serialPortComboBox.getItemCount() - 1; i >= 0; i--){
             serialPortComboBox.removeItemAt(i);
         }
-        populateComboBox();
+        populateSerialPortComboBox();
     }//GEN-LAST:event_serialPortComboBoxPopupMenuWillBecomeVisible
 
     private void addScheduledLogoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addScheduledLogoutButtonActionPerformed
