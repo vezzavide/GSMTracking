@@ -31,6 +31,7 @@ public class settingsFrame extends javax.swing.JFrame {
         this.parentForm = parentForm;
         this.testMachine = testMachine;
         populateSerialPortComboBox();
+        
         machineTextField.setText(testMachine.getMachine());
         databaseServerNameTextField.setText(testMachine.getDatabaseServerName());
         databaseUserTextField.setText(testMachine.getDatabaseUser());

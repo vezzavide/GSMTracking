@@ -83,6 +83,7 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
         
         boardTextField.setText("Errore");
         testOutcomeTextField.setText("");
+        serverStateTextField.setText("");
         testOutcomeTextField.setBackground(null);
         
         int delay = 500; //milliseconds
