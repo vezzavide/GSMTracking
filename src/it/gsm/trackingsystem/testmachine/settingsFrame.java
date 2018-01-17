@@ -290,9 +290,11 @@ public class settingsFrame extends javax.swing.JFrame {
     private void populateSerialPortComboBox(){
         //Populate combobox with available serial ports
         SerialPort[] ports = testMachine.getAvailableSerialPorts();
+        serialPortComboBox.addItem("");
         for (SerialPort port : ports) {
             serialPortComboBox.addItem(port.getSystemPortName());
         }
+        // Selects the current serialPort (if it exists)
         for (int i = 0; i < serialPortComboBox.getItemCount(); i++) {
             if (serialPortComboBox.getItemAt(i).toString().equals(testMachine.getSerialPortString())) {
                 serialPortComboBox.setSelectedIndex(i);
