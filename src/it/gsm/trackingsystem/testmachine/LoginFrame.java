@@ -51,6 +51,17 @@ public class LoginFrame extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         newUserPasswordField = new javax.swing.JPasswordField();
         newUserRepeatPasswordField = new javax.swing.JPasswordField();
+        changePasswordFrame = new javax.swing.JFrame();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        usernameChangePasswordFrameTextField = new javax.swing.JTextField();
+        oldPasswordUsernameChangePasswordFrameTextField = new javax.swing.JPasswordField();
+        newPasswordChangePasswordFrameTextField = new javax.swing.JPasswordField();
+        repeatedPasswordChangePasswordFrameTextField = new javax.swing.JPasswordField();
+        changePasswordButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -61,6 +72,7 @@ public class LoginFrame extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
         newUserMenuItem = new javax.swing.JMenuItem();
         changePasswordMenuItem = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
         settingsMenuItem = new javax.swing.JMenuItem();
 
@@ -150,6 +162,86 @@ public class LoginFrame extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        changePasswordFrame.setPreferredSize(new java.awt.Dimension(342, 249));
+        changePasswordFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                changePasswordFrameWindowClosing(evt);
+            }
+        });
+
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setText("Inserici i tuoi dati:");
+
+        jLabel11.setText("Username:");
+
+        jLabel12.setText("Vecchia password:");
+
+        jLabel13.setText("Nuova password:");
+
+        jLabel14.setText("Ripeti nuova password:");
+
+        changePasswordButton.setText("Cambia password");
+        changePasswordButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changePasswordButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout changePasswordFrameLayout = new javax.swing.GroupLayout(changePasswordFrame.getContentPane());
+        changePasswordFrame.getContentPane().setLayout(changePasswordFrameLayout);
+        changePasswordFrameLayout.setHorizontalGroup(
+            changePasswordFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(changePasswordFrameLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(changePasswordFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(changePasswordFrameLayout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(usernameChangePasswordFrameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(changePasswordFrameLayout.createSequentialGroup()
+                        .addComponent(jLabel12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+                        .addComponent(oldPasswordUsernameChangePasswordFrameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, changePasswordFrameLayout.createSequentialGroup()
+                        .addGroup(changePasswordFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel13)
+                            .addComponent(jLabel14))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(changePasswordFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(repeatedPasswordChangePasswordFrameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
+                            .addComponent(newPasswordChangePasswordFrameTextField)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, changePasswordFrameLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(changePasswordButton)))
+                .addContainerGap())
+        );
+        changePasswordFrameLayout.setVerticalGroup(
+            changePasswordFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(changePasswordFrameLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel5)
+                .addGap(18, 18, 18)
+                .addGroup(changePasswordFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(usernameChangePasswordFrameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(changePasswordFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(oldPasswordUsernameChangePasswordFrameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(changePasswordFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel13)
+                    .addComponent(newPasswordChangePasswordFrameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(changePasswordFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel14)
+                    .addComponent(repeatedPasswordChangePasswordFrameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                .addComponent(changePasswordButton)
+                .addContainerGap())
+        );
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Tracking System - Login");
         setResizable(false);
@@ -185,7 +277,15 @@ public class LoginFrame extends javax.swing.JFrame {
         jMenu2.add(newUserMenuItem);
 
         changePasswordMenuItem.setText("Cambio password");
+        changePasswordMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changePasswordMenuItemActionPerformed(evt);
+            }
+        });
         jMenu2.add(changePasswordMenuItem);
+
+        jMenuItem1.setText("Cambio password (aiuto da amministratore)");
+        jMenu2.add(jMenuItem1);
 
         jMenuBar1.add(jMenu2);
 
@@ -211,15 +311,15 @@ public class LoginFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(loginButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
-                        .addComponent(usernameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel3)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(passwordField, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                            .addComponent(usernameTextField))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -252,12 +352,18 @@ public class LoginFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         String password = new String(newUserPasswordField.getPassword());
         String repeatedPassword = new String(newUserRepeatPasswordField.getPassword());
-        if(!password.equals(repeatedPassword)){
-            String error = "Le pasword non corrispondono!";
-            JOptionPane.showMessageDialog(this, error, "Errore", JOptionPane.WARNING_MESSAGE);
+        if(newNameTextField.getText().equals("")
+                || newSurnameTextField.getText().equals("")
+                || newUsernameTextField.getText().equals("")
+                || password.equals("")){
+            String error = "Non possono esserci campi nulli!";
+            JOptionPane.showMessageDialog(newUserFrame, error, "Errore", JOptionPane.ERROR_MESSAGE);
         }
-        else{
-            if(testMachine.newUser(newNameTextField.getText(),
+        else if(!password.equals(repeatedPassword)){
+            String error = "Le pasword non corrispondono!";
+            JOptionPane.showMessageDialog(newUserFrame, error, "Attenzione", JOptionPane.WARNING_MESSAGE);
+        }
+        else if(testMachine.newUser(newNameTextField.getText(),
                     newSurnameTextField.getText(),
                     newUsernameTextField.getText(),
                     password)){
@@ -265,7 +371,6 @@ public class LoginFrame extends javax.swing.JFrame {
                 passwordField.setText(password);
                 newUserFrame.dispose();
                 this.setEnabled(true);
-            }
         }
     }//GEN-LAST:event_sendNewUserToDatabaseButtonActionPerformed
 
@@ -296,6 +401,40 @@ public class LoginFrame extends javax.swing.JFrame {
         login();
     }//GEN-LAST:event_passwordFieldActionPerformed
 
+    private void changePasswordMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changePasswordMenuItemActionPerformed
+        // TODO add your handling code here:
+        changePasswordFrame.pack();
+        changePasswordFrame.setVisible(true);
+        this.setEnabled(false);
+    }//GEN-LAST:event_changePasswordMenuItemActionPerformed
+
+    private void changePasswordFrameWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_changePasswordFrameWindowClosing
+        // TODO add your handling code here:
+        usernameChangePasswordFrameTextField.setText("");
+        oldPasswordUsernameChangePasswordFrameTextField.setText("");
+        newPasswordChangePasswordFrameTextField.setText("");
+        repeatedPasswordChangePasswordFrameTextField.setText("");
+        this.setEnabled(true);
+    }//GEN-LAST:event_changePasswordFrameWindowClosing
+
+    private void changePasswordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changePasswordButtonActionPerformed
+        String username = usernameChangePasswordFrameTextField.getText();
+        String oldPassword = new String(oldPasswordUsernameChangePasswordFrameTextField.getPassword());
+        String newPassword = new String(newPasswordChangePasswordFrameTextField.getPassword());
+        String repeatedNewPassword = new String(repeatedPasswordChangePasswordFrameTextField.getPassword());
+        if(!newPassword.equals(repeatedNewPassword)){
+            String error = "Le pasword non corrispondono!";
+            JOptionPane.showMessageDialog(changePasswordFrame, error, "Attenzione", JOptionPane.WARNING_MESSAGE);
+        }
+        // Attempts to change password
+        else if(testMachine.changePassword(username, oldPassword, newPassword)){
+            this.setEnabled(true);
+            String message = "Password cambiata!";
+            JOptionPane.showMessageDialog(changePasswordFrame, message, "Password cambiata", JOptionPane.PLAIN_MESSAGE);
+            changePasswordFrame.dispose();
+        }
+    }//GEN-LAST:event_changePasswordButtonActionPerformed
+
     private void login(){
         String password = new String(passwordField.getPassword());
         if (testMachine.login(usernameTextField.getText(), password)){
@@ -305,12 +444,19 @@ public class LoginFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton changePasswordButton;
+    private javax.swing.JFrame changePasswordFrame;
     private javax.swing.JMenuItem changePasswordMenuItem;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -318,17 +464,22 @@ public class LoginFrame extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JButton loginButton;
     private javax.swing.JTextField newNameTextField;
+    private javax.swing.JPasswordField newPasswordChangePasswordFrameTextField;
     private javax.swing.JTextField newSurnameTextField;
     private javax.swing.JFrame newUserFrame;
     private javax.swing.JMenuItem newUserMenuItem;
     private javax.swing.JPasswordField newUserPasswordField;
     private javax.swing.JPasswordField newUserRepeatPasswordField;
     private javax.swing.JTextField newUsernameTextField;
+    private javax.swing.JPasswordField oldPasswordUsernameChangePasswordFrameTextField;
     private javax.swing.JPasswordField passwordField;
+    private javax.swing.JPasswordField repeatedPasswordChangePasswordFrameTextField;
     private javax.swing.JButton sendNewUserToDatabaseButton;
     private javax.swing.JMenuItem settingsMenuItem;
+    private javax.swing.JTextField usernameChangePasswordFrameTextField;
     private javax.swing.JTextField usernameTextField;
     // End of variables declaration//GEN-END:variables
 }
