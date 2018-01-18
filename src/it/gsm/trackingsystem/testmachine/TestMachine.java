@@ -377,6 +377,7 @@ public class TestMachine {
     }
     
     public boolean newUser(String name, String surname, String username, String password){
+        // TODO implement hashing and salting
         try{
             Connection conn = dataSource.getConnection();
             Statement statement = conn.createStatement();
@@ -412,6 +413,7 @@ public class TestMachine {
     }
     
     public boolean login(String username, String password){
+        // TODO: implement hashing and salting
         try{
             Connection conn = dataSource.getConnection();
             Statement statement = conn.createStatement();
