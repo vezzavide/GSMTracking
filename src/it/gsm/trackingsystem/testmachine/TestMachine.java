@@ -416,6 +416,101 @@ public class TestMachine {
         }
     }
     
+    public boolean changePasswordWithAdmin(
+            String adminUsername,
+            String adminPassword,
+            String username,
+            String newPassword){
+        try(Connection conn = dataSource.getConnection();
+                Statement statement = conn.createStatement()){
+            // Verifies admin data
+            String query = "SELECT user.password FROM tracking_system.user "
+                    + "WHERE username='"
+                    + adminUsername
+                    + "';";
+            ResultSet resultSet = statement.executeQuery(query);
+            //Check if the result set is empty
+            if(!resultSet.next()){
+                generateDisplayErrorEvent("Username amministratore inesistente!");
+                return false;
+            }
+            String sentHashedAdminPassword = resultSet.getString("password");
+            if(BCrypt.checkpw(adminPassword, sentHashedAdminPassword)){
+                // admin password ok, changes password for user username
+                String newHashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+                query = "UPDATE tracking_system.user "
+                        + "SET password = '"
+                        + newHashedPassword
+                        + "' "
+                        + "WHERE username = '"
+                        + username
+                        + "';";
+                statement.executeUpdate(query);
+                return true;
+            }
+            else{
+                generateDisplayErrorEvent("Password utente amministratore sbagliata!");
+                return false;
+            }
+            
+        }
+        catch(SQLException ex){
+            logger.log(Level.SEVERE, null, ex);
+            generateDisplayErrorEvent("Errore dal server:"
+                                        + System.lineSeparator()
+                                        + ex.toString());
+            return false;
+        }
+    }
+    
+    public boolean changePassword(
+            String username,
+            String oldPassword,
+            String newPassword){
+        try (Connection conn = dataSource.getConnection();
+                Statement statement = conn.createStatement()) {
+            // Gets user data
+            String query = "SELECT user.password FROM tracking_system.user "
+                    + "WHERE username='"
+                    + username
+                    + "';";
+            ResultSet resultSet = statement.executeQuery(query);
+            //Checks if the result set is empty (returns false in that case)
+            if(!resultSet.next()){
+                conn.close();
+                statement.close();
+                generateDisplayErrorEvent("Username inesistente!");
+                return false;
+            }
+            String sentHashedPassword = resultSet.getString("password");
+            
+            // Checks old password
+            if(BCrypt.checkpw(oldPassword, sentHashedPassword)){
+                String newHashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+                query = "UPDATE tracking_system.user "
+                        + "SET password = '"
+                        + newHashedPassword
+                        + "' "
+                        + "WHERE username = '"
+                        + username
+                        + "';";
+                statement.executeUpdate(query);
+                return true;
+            }
+            else{
+                generateDisplayErrorEvent("Vecchia password errata!");
+                return false;
+            }
+        }
+        catch(SQLException ex){
+            logger.log(Level.SEVERE, null, ex);
+            generateDisplayErrorEvent("Errore dal server:"
+                                        + System.lineSeparator()
+                                        + ex.toString());
+            return false;
+        }
+    }
+    
     public boolean login(String username, String password){
         // TODO: implement hashing and salting
         try{
@@ -734,13 +829,15 @@ public class TestMachine {
                             + System.lineSeparator()
                             + "Possibili cause:"
                             + System.lineSeparator()
+                            + "- scanner posizionato male"
+                            + System.lineSeparator()
                             + "- etichetta rovinata o non presente, controllare la scheda"
                             + System.lineSeparator()
-                            + "- connessione fisica tra Arduino e scanner compromessa"
+                            + "- vetro dello scanner sporco"
                             + System.lineSeparator()
                             + "- scanner spento"
                             + System.lineSeparator()
-                            + "- vetro dello scanner sporco");
+                            + "- connessione fisica tra Arduino e scanner compromessa");
                     break;
                 case 2:
                     generateDisplayErrorEvent("Errore E2: il codice ricevuto dallo scanner è più corto del previsto."
@@ -770,7 +867,7 @@ public class TestMachine {
                             + "- disturbi sulla connessione scanner-arduino");
                     break;
                 default:
-                    generateDisplayErrorEvent("Codice errore non conosciuto, probabile disturbo sulla linea USB");
+                    generateDisplayErrorEvent("Codice errore sconosciuto, probabile disturbo sulla linea USB");
                     break;
             }
             errorState = true;
