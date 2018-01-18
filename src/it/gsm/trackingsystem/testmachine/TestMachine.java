@@ -20,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.Properties;
 import java.time.*;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
@@ -384,6 +385,9 @@ public class TestMachine {
             
             String capitalizedName = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
             String capitalizedSurname = surname.substring(0, 1).toUpperCase() + surname.substring(1).toLowerCase();
+            // NOTE: hashedPassword contains both salt hand hashed salted password,
+            // all handled by BCrypt algorithm
+            String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
             
             //Insert new user
             String query = "INSERT INTO tracking_system.user VALUES (default, '"
@@ -393,7 +397,7 @@ public class TestMachine {
                     + "', '"
                     + username
                     + "', '"
-                    + password
+                    + hashedPassword
                     + "', '0');";
             statement.executeUpdate(query);
             //System.out.println("Query: " + query);
@@ -433,33 +437,39 @@ public class TestMachine {
                 generateDisplayErrorEvent("Username inesistente!");
                 return false;
             }
+            // sentPassword contains salt AND hashed salted password,
+            // everything in the same row, all handled by BCrypt
             String sentPassword = resultSet.getString("password");
             String sentName = resultSet.getString("name");
             String sentSurname = resultSet.getString("surname");
             String sentUsername = resultSet.getString("username");
             boolean sentAdmin = resultSet.getBoolean("admin");
-            
-            // Now creates new login on server
-            query = "INSERT INTO tracking_system.login "
-                    + "VALUES (default, '"
-                    + sentUsername
-                    + "', default, '"
-                    + machine
-                    + "');";
-            statement.executeUpdate(query);
-            
-            // Now gets last incremented ID
-            query = "SELECT LAST_INSERT_ID();";
-            resultSet = statement.executeQuery(query);
-            resultSet.next();
-            int sentLoginID = resultSet.getInt("LAST_INSERT_ID()");
-            //System.out.println("loginID ottenuto: " + sentLoginID);
-            
             conn.close();
             statement.close();
             
-            if(sentPassword.equals(password)){
+            //Check hashed and salted password
+            if(BCrypt.checkpw(password, sentPassword)){
                 // if this point is reached, login has been succesful
+                // Now creates new login on server
+                conn = dataSource.getConnection();
+                statement = conn.createStatement();
+                query = "INSERT INTO tracking_system.login "
+                        + "VALUES (default, '"
+                        + sentUsername
+                        + "', default, '"
+                        + machine
+                        + "');";
+                statement.executeUpdate(query);
+
+                // Now gets last incremented ID
+                query = "SELECT LAST_INSERT_ID();";
+                resultSet = statement.executeQuery(query);
+                resultSet.next();
+                int sentLoginID = resultSet.getInt("LAST_INSERT_ID()");
+                //System.out.println("loginID ottenuto: " + sentLoginID);
+                conn.close();
+                statement.close();
+                
                 user = new User(sentName, sentSurname, sentUsername, sentAdmin, sentLoginID);
                 //generateLoginOccurredEvent();
                 
