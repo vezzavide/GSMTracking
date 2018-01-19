@@ -78,7 +78,7 @@ public class settingsFrame extends javax.swing.JFrame {
         applyButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Tracking System - Macchina - Impostazioni");
+        setTitle("GSMTracking - Macchina - Impostazioni");
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 formWindowClosed(evt);
