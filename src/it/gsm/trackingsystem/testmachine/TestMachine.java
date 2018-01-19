@@ -416,6 +416,43 @@ public class TestMachine {
         }
     }
     
+    public boolean authenticateAdmin(String username, String password){
+        try(Connection conn = dataSource.getConnection();
+                Statement statement = conn.createStatement()){
+            // Verifies admin data
+            String query = "SELECT user.password, user.admin FROM tracking_system.user "
+                    + "WHERE username='"
+                    + username
+                    + "';";
+            ResultSet resultSet = statement.executeQuery(query);
+            //Check if the result set is empty
+            if(!resultSet.next()){
+                generateDisplayErrorEvent("Username inesistente!");
+                return false;
+            }
+            boolean isAdmin = resultSet.getBoolean("admin");
+            if(!isAdmin){
+                generateDisplayErrorEvent("Questo utente non ha i privilegi di amministratore.");
+                return false;
+            }
+            String sentHashedAdminPassword = resultSet.getString("password");
+            if(BCrypt.checkpw(password, sentHashedAdminPassword)){
+                return true;
+            }
+            else{
+                generateDisplayErrorEvent("Password utente amministratore sbagliata!");
+                return false;
+            }
+        }
+        catch(SQLException ex){
+            logger.log(Level.SEVERE, null, ex);
+            generateDisplayErrorEvent("Errore dal server:"
+                                        + System.lineSeparator()
+                                        + ex.toString());
+            return false;
+        }
+    }
+    
     public boolean changePasswordWithAdmin(
             String adminUsername,
             String adminPassword,
@@ -434,7 +471,9 @@ public class TestMachine {
                 generateDisplayErrorEvent("Username amministratore inesistente!");
                 return false;
             }
+            
             String sentHashedAdminPassword = resultSet.getString("password");
+            
             if(BCrypt.checkpw(adminPassword, sentHashedAdminPassword)){
                 // admin password ok, changes password for user username
                 String newHashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());

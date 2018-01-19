@@ -247,6 +247,14 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        forceSignalsFrame = new javax.swing.JFrame();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        adminUsernameTextField = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        adminPasswordField = new javax.swing.JPasswordField();
+        forceReScanButton = new javax.swing.JButton();
+        forceGoodToGoButton = new javax.swing.JButton();
         connectButton = new javax.swing.JButton();
         reScanButton = new javax.swing.JButton();
         goodToGoButton = new javax.swing.JButton();
@@ -265,8 +273,83 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         logoutMenuItem = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
+        forceSignalsMenuItem = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         settingsMenuItem = new javax.swing.JMenuItem();
+
+        forceSignalsFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                forceSignalsFrameWindowClosing(evt);
+            }
+        });
+
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("Inserisci dati per account amministratore:");
+
+        jLabel5.setText("Username:");
+
+        adminUsernameTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        jLabel6.setText("Password:");
+
+        adminPasswordField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        forceReScanButton.setText("Forza re-scan");
+        forceReScanButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                forceReScanButtonActionPerformed(evt);
+            }
+        });
+
+        forceGoodToGoButton.setText("Forza procedi");
+        forceGoodToGoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                forceGoodToGoButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout forceSignalsFrameLayout = new javax.swing.GroupLayout(forceSignalsFrame.getContentPane());
+        forceSignalsFrame.getContentPane().setLayout(forceSignalsFrameLayout);
+        forceSignalsFrameLayout.setHorizontalGroup(
+            forceSignalsFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(forceSignalsFrameLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(forceSignalsFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(forceSignalsFrameLayout.createSequentialGroup()
+                        .addGroup(forceSignalsFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(forceSignalsFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(adminPasswordField, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
+                            .addComponent(adminUsernameTextField)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, forceSignalsFrameLayout.createSequentialGroup()
+                        .addComponent(forceReScanButton, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(forceGoodToGoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        forceSignalsFrameLayout.setVerticalGroup(
+            forceSignalsFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(forceSignalsFrameLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel4)
+                .addGap(18, 18, 18)
+                .addGroup(forceSignalsFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(adminUsernameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(forceSignalsFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(adminPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(forceSignalsFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(forceReScanButton, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
+                    .addComponent(forceGoodToGoButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("GSMTracking - Macchina");
@@ -338,6 +421,18 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
         jMenu1.add(logoutMenuItem);
 
         jMenuBar1.add(jMenu1);
+
+        jMenu3.setText("Amministratore");
+
+        forceSignalsMenuItem.setText("Forza comandi al microcontrollore");
+        forceSignalsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                forceSignalsMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu3.add(forceSignalsMenuItem);
+
+        jMenuBar1.add(jMenu3);
 
         jMenu2.setText("Impostazioni");
 
@@ -490,6 +585,45 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
         }
     }//GEN-LAST:event_settingsMenuItemActionPerformed
 
+    private void forceSignalsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_forceSignalsMenuItemActionPerformed
+        if(testMachine.isConnected()){
+            this.setEnabled(false);
+            forceSignalsFrame.pack();
+            forceSignalsFrame.setVisible(true);
+        }
+        else{
+            displayError("Per forzare comandi al microcontrollore, avvia l'applicazione.");
+        }
+    }//GEN-LAST:event_forceSignalsMenuItemActionPerformed
+
+    private void forceReScanButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_forceReScanButtonActionPerformed
+        String adminUsername = adminUsernameTextField.getText();
+        String adminPassword = new String(adminPasswordField.getPassword());
+        if(testMachine.authenticateAdmin(adminUsername, adminPassword)){
+            testMachine.sendReScanSignal();
+            normalStateEvent();
+            this.setEnabled(true);
+            forceSignalsFrame.dispose();
+        }
+    }//GEN-LAST:event_forceReScanButtonActionPerformed
+
+    private void forceSignalsFrameWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_forceSignalsFrameWindowClosing
+        adminPasswordField.setText("");
+        adminUsernameTextField.setText("");
+        this.setEnabled(true);
+    }//GEN-LAST:event_forceSignalsFrameWindowClosing
+
+    private void forceGoodToGoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_forceGoodToGoButtonActionPerformed
+        String adminUsername = adminUsernameTextField.getText();
+        String adminPassword = new String(adminPasswordField.getPassword());
+        if(testMachine.authenticateAdmin(adminUsername, adminPassword)){
+            testMachine.sendGoodToGoSignal();
+            normalStateEvent();
+            this.setEnabled(true);
+            forceSignalsFrame.dispose();
+        }
+    }//GEN-LAST:event_forceGoodToGoButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -528,15 +662,25 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPasswordField adminPasswordField;
+    private javax.swing.JTextField adminUsernameTextField;
     private javax.swing.JTextField boardTextField;
     private javax.swing.JButton connectButton;
     private javax.swing.JLabel currentUserLabel;
+    private javax.swing.JButton forceGoodToGoButton;
+    private javax.swing.JButton forceReScanButton;
+    private javax.swing.JFrame forceSignalsFrame;
+    private javax.swing.JMenuItem forceSignalsMenuItem;
     private javax.swing.JButton goodToGoButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
