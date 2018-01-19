@@ -176,7 +176,6 @@ public class LoginFrame extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        changePasswordFrame.setPreferredSize(new java.awt.Dimension(342, 249));
         changePasswordFrame.addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 changePasswordFrameWindowClosing(evt);
@@ -363,7 +362,7 @@ public class LoginFrame extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Tracking System - Login");
+        setTitle("GSMTracking - Login");
         setResizable(false);
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
