@@ -269,7 +269,7 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
         settingsMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Tracking System - Macchina");
+        setTitle("GSMTracking - Macchina");
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
