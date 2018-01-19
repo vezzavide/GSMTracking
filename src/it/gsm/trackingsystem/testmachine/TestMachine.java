@@ -105,9 +105,7 @@ public class TestMachine {
             generateDisplayErrorEvent("Errore nel caricare le impostazioni! Inserirle manualmente.");
         }
         
-        if (debug){
-            logger.log(Level.SEVERE, "Nuova istanza di TestMachine");
-        }
+        logIfDebugging("Nuova istanza di TestMachine");
     }
     
     public void addListener(TestMachineListener toAdd){
@@ -119,9 +117,7 @@ public class TestMachine {
         for (TestMachineListener packetListener : listeners){
             packetListener.dataPacketReceivedEvent(board);
         }
-        if (debug){
-            logger.log(Level.SEVERE, "Inviato a GUI evento di pacchetto ricevuto");
-        }
+        logIfDebugging("Inviato a GUI evento di pacchetto ricevuto");
     }
     
     // EVENT
@@ -129,9 +125,7 @@ public class TestMachine {
         for (TestMachineListener packetListener : listeners){
             packetListener.displayError(message);
         }
-        if (debug){
-            logger.log(Level.SEVERE, "Inviato a GUI evento di display error");
-        }
+        logIfDebugging("Inviato a GUI evento di display error");
     }
     
     // EVENT
@@ -139,9 +133,7 @@ public class TestMachine {
         for (TestMachineListener packetListener : listeners){
             packetListener.errorStateEvent();
         }
-        if (debug){
-            logger.log(Level.SEVERE, "Inviato a GUI evento di stato di errore");
-        }
+        logIfDebugging("Inviato a GUI evento di stato di errore");
     }
     
     // EVENT
@@ -149,9 +141,7 @@ public class TestMachine {
         for (TestMachineListener packetListener : listeners){
             packetListener.normalStateEvent();
         }
-        if (debug){
-            logger.log(Level.SEVERE, "Inviato a GUI evento di stato normale");
-        }
+        logIfDebugging("Inviato a GUI evento di stato normale");
     }
     
     // EVENT
@@ -159,9 +149,7 @@ public class TestMachine {
         for (TestMachineListener packetListener : listeners){
             packetListener.boardNotGoodEvent();
         }
-        if (debug){
-            logger.log(Level.SEVERE, "Inviato a GUI evento di scheda non good");
-        }
+        logIfDebugging("Inviato a GUI evento di scheda non good");
     }
     
     // EVENT
@@ -251,6 +239,12 @@ public class TestMachine {
         return debug;
     }
     
+    private void logIfDebugging(String message){
+        if(debug){
+            logger.log(Level.SEVERE, message);
+        }
+    }
+    
     public void changeProperties(
             String serialPort,
             String machine,
@@ -321,6 +315,7 @@ public class TestMachine {
     }
     
     private void scheduleNextLogout(){
+        logIfDebugging("Inizio a fissare il prossimo logout");
         // Deletes the last scheduled logout
         logoutTimer.cancel();
         // Finds the nearest login in the (future) timeline
@@ -375,9 +370,11 @@ public class TestMachine {
             nextLogoutString = "nessuno";
         }
         generateLogoutScheduledEvent(nextLogoutString);
+        logIfDebugging("Next logout scheduled");
     }
     
     public boolean newUser(String name, String surname, String username, String password){
+        logIfDebugging("Inizio a creare un nuovo utente");
         // TODO implement hashing and salting
         try{
             Connection conn = dataSource.getConnection();
@@ -401,6 +398,7 @@ public class TestMachine {
                     + "', '0');";
             statement.executeUpdate(query);
             //System.out.println("Query: " + query);
+            logIfDebugging("Nuovo utente creato");
             return true;
         }
         catch(com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException ex){
@@ -417,6 +415,7 @@ public class TestMachine {
     }
     
     public boolean authenticateAdmin(String username, String password){
+        logIfDebugging("Rischiesta di autenticazione account amministratore ricevuta");
         try(Connection conn = dataSource.getConnection();
                 Statement statement = conn.createStatement()){
             // Verifies admin data
@@ -437,6 +436,7 @@ public class TestMachine {
             }
             String sentHashedAdminPassword = resultSet.getString("password");
             if(BCrypt.checkpw(password, sentHashedAdminPassword)){
+                logIfDebugging("Amministraotre autenticato");
                 return true;
             }
             else{
@@ -458,6 +458,7 @@ public class TestMachine {
             String adminPassword,
             String username,
             String newPassword){
+        logIfDebugging("Inizio cambio password con aiuto amministratore");
         try(Connection conn = dataSource.getConnection();
                 Statement statement = conn.createStatement()){
             // Verifies admin data
@@ -485,6 +486,7 @@ public class TestMachine {
                         + username
                         + "';";
                 statement.executeUpdate(query);
+                logIfDebugging("Password cambiata!");
                 return true;
             }
             else{
@@ -506,6 +508,7 @@ public class TestMachine {
             String username,
             String oldPassword,
             String newPassword){
+        logIfDebugging("Inizio cambio password con oldPassword");
         try (Connection conn = dataSource.getConnection();
                 Statement statement = conn.createStatement()) {
             // Gets user data
@@ -534,6 +537,7 @@ public class TestMachine {
                         + username
                         + "';";
                 statement.executeUpdate(query);
+                logIfDebugging("Password cambiata");
                 return true;
             }
             else{
@@ -551,7 +555,7 @@ public class TestMachine {
     }
     
     public boolean login(String username, String password){
-        // TODO: implement hashing and salting
+        logIfDebugging("Nuovo tentativo di login");
         try{
             Connection conn = dataSource.getConnection();
             Statement statement = conn.createStatement();
@@ -614,6 +618,7 @@ public class TestMachine {
                 loggedIn = true;
                 scheduleNextLogout();
                 generateLoginOccurredEvent();
+                logIfDebugging("Login andato a buon fine");
                 return true;
             }
             else{
@@ -631,6 +636,7 @@ public class TestMachine {
     }
     
     public void logout(){
+        logIfDebugging("Logout in corso");
         disconnect();
         user = null;
         loggedIn = false;
@@ -642,15 +648,11 @@ public class TestMachine {
     }
     
     private void flushSerialPort(){
-        if (debug){
-            logger.log(Level.SEVERE, "Inizio il flush serial port");
-        }
+        logIfDebugging("Inizio il flush serial port");
         int lengthToFlush = serialPort.bytesAvailable();
         byte[] flushBuffer = new byte[lengthToFlush];
         serialPort.readBytes(flushBuffer, lengthToFlush);
-        if (debug){
-            logger.log(Level.SEVERE, "Finito il flush serial port");
-        }
+        logIfDebugging("Finito il flush serial port");
     }
     
     
@@ -661,18 +663,13 @@ public class TestMachine {
     }
     
     public boolean connect() {
-        if (debug){
-            logger.log(Level.SEVERE, "Tento apertura porta seriale");
-        }
+        logIfDebugging("Tento apertura porta seriale");
         try {
             if(serialPort.openPort()){
                 serialPortJustStarted = true;
                 serialPort.openPort();
                 createSerialPortListener();
-
-                if (debug){
-                    logger.log(Level.SEVERE, "Apertura porta seriale riuscita");
-                }   
+                logIfDebugging("Apertura porta seriale riuscita");
                 connected = true;
                 generateConnectedEvent();
                 return true;
@@ -682,9 +679,7 @@ public class TestMachine {
                 generateDisplayErrorEvent("La porta seriale di default non è più presente."
                 + System.lineSeparator() + "Selezionarne una nuova tra le disponibili nel menu impostazioni.");
 
-                if (debug) {
-                    logger.log(Level.SEVERE, "Apertura porta seriale non riuscita");
-                }
+                logIfDebugging("Apertura porta seriale non riuscita");
                 connected = false;
                 generateDisconnectedEvent();
                 return false;
@@ -696,9 +691,7 @@ public class TestMachine {
                                     + System.lineSeparator()
                                     + ex.toString());
             
-            if (debug){
-                logger.log(Level.SEVERE, "Apertura porta seriale non riuscita");
-            }
+            logIfDebugging("Apertura porta seriale non riuscita");
             connected = false;
             generateDisconnectedEvent();
             return false;
@@ -723,39 +716,27 @@ public class TestMachine {
     }
     
     public void sendGoodToGoSignal() {
-        if (debug){
-            logger.log(Level.SEVERE, "Inizio a inviare il segnale di via libera");
-        }
+        logIfDebugging("Inizio a inviare il segnale di via libera");
         flushSerialPort();
         serialPort.writeBytes("G".getBytes(), 1);
-        if (debug){
-            logger.log(Level.SEVERE, "Segnale di via libera inviato");
-        }
+        logIfDebugging("Segnale di via libera inviato");
     }
     
     public void sendReScanSignal() {
-        if (debug){
-            logger.log(Level.SEVERE, "Inizio a inviare il segnale di rescan");
-        }
+        logIfDebugging("Inizio a inviare il segnale di rescan");
         flushSerialPort();
         serialPort.writeBytes("S".getBytes(), 1);
-        if (debug){
-            logger.log(Level.SEVERE, "Segnale di rescan inviato");
-        }
+        logIfDebugging("Segnale di rescan inviato");
     }
     
-    private boolean readDataPacketInBlockingMode(){
+    private boolean readDataPacketInTimeoutMode(){
         try{
-            if (debug){
-                logger.log(Level.SEVERE, "Inizio lettura data packet");
-            }
+            logIfDebugging("Inizio lettura data packet");
             // reset error counter in case there have actually been errors
             errorRecoveryAttemptsCounter = 0;
             // Starts timer for readign timeout
             long startReadingTime = System.currentTimeMillis();
-            if (debug){
-                logger.log(Level.SEVERE, "Comincio ad aspettare che siano ricevuti 27 byte");
-            }
+            logIfDebugging("Comincio ad aspettare che siano ricevuti 27 byte");
             while(serialPort.bytesAvailable() < 27){
                 /*wait for whole packet to be received:
                     - 1 TAB;
@@ -765,15 +746,11 @@ public class TestMachine {
                         TOT: 27 bytes
                 */
                 if((System.currentTimeMillis() - startReadingTime) > readTimeOut){
-                    if (debug){
-                        logger.log(Level.SEVERE, "Timeout data packet scaduto, non ho ricevuto abbastanza dati");
-                    }
+                    logIfDebugging("Timeout data packet scaduto, non ho ricevuto abbastanza dati");
                     return false;
                 }
             }
-            if (debug){
-                logger.log(Level.SEVERE, "Ho ricevuto almeno 27 byte");
-            }
+            logIfDebugging("Ho ricevuto almeno 27 byte");
             currentBoard = new Board();
             byte[] byteCharacter = new byte[27];
             serialPort.readBytes(byteCharacter, 27);
@@ -788,9 +765,7 @@ public class TestMachine {
             }
             //updatePacketGUI();
             generateDataPacketReceivedEvent(currentBoard);
-            if (debug){
-                logger.log(Level.SEVERE, "Ho finito di leggere il data packet. la scheda ricevuta è: " + currentBoard.getCode());
-            }
+            logIfDebugging("Ho finito di leggere il data packet. la scheda ricevuta è: " + currentBoard.getCode());
             if (currentBoard.check()){
                 generateDataPacketReceivedEvent(currentBoard);
                 return true;
@@ -801,22 +776,16 @@ public class TestMachine {
         }
         catch(Exception ex){
             logger.log(Level.SEVERE, null, ex);
-            if (debug){
-                logger.log(Level.SEVERE, "Si è verificata una eccezione mentre ricevevo e leggevo il datapacket");
-            }
+            logIfDebugging("Si è verificata una eccezione mentre ricevevo e leggevo il datapacket");
             return false;
         }
     }
     
-    private Integer readErrorPacketInBlockingMode(){
+    private Integer readErrorPacketInTimeoutMode(){
         try{
-            if (debug){
-                logger.log(Level.SEVERE, "Comincio a leggere l'error packet");
-            }
+            logIfDebugging("Comincio a leggere l'error packet");
             long startReadingTime = System.currentTimeMillis();
-            if (debug){
-                logger.log(Level.SEVERE, "Comincio ad aspettare che siano ricevuto 2 byte");
-            }
+            logIfDebugging("Comincio ad aspettare che siano ricevuto 2 byte");
             while(serialPort.bytesAvailable() < 2){
                 // Just wait for whole errore paket to be received:
                 //      - 1 TAB
@@ -824,24 +793,18 @@ public class TestMachine {
                 //          TOT: 2 bytes
 
                 if((System.currentTimeMillis() - startReadingTime) > readTimeOut){
-                    if (debug){
-                        logger.log(Level.SEVERE, "Timeout error packet scaduto, non ho ricevuto abbastanza dati");
-                    }
+                    logIfDebugging("Timeout error packet scaduto, non ho ricevuto abbastanza dati");
                     return null;
                 }
             }
-            if (debug){
-                logger.log(Level.SEVERE, "Sono stati ricevuti abbastanza dati");
-            }
+            logIfDebugging("Sono stati ricevuti abbastanza dati");
             byte[] byteCharacter = new byte[2];
             serialPort.readBytes(byteCharacter, 2);
             Character character = (char)byteCharacter[1];
             String error = character.toString();
             int errorCode = Integer.parseInt(error);
             //System.out.println("Errore da Arduino: codice " + error);
-            if (debug){
-                logger.log(Level.SEVERE, "Ho finito di ricevere l'error packet, errore " + error);
-            }
+            logIfDebugging("Ho finito di ricevere l'error packet, errore " + error);
             return errorCode;
         }
         catch(Exception ex){
@@ -851,9 +814,7 @@ public class TestMachine {
     }
     
     private void handleArduinoError(int errorCode){
-        if (debug){
-            logger.log(Level.SEVERE, "Comincio a gestire un errore arduino");
-        }
+        logIfDebugging("Comincio a gestire un errore arduino");
         if (errorRecoveryAttemptsCounter < maxErrorRecoveryAttempts){
             flushSerialPort();
             sendReScanSignal();
@@ -911,16 +872,12 @@ public class TestMachine {
             }
             errorState = true;
             generateErrorStateEvent();
-            if (debug){
-                logger.log(Level.SEVERE, "Ho finito di gestire errore arduino");
-            }
+            logIfDebugging("Ho finito di gestire errore arduino");
         }
     }
     
     private boolean sendCurrentPacketToDB(){
-        if (debug){
-            logger.log(Level.SEVERE, "Comincio l'operazione di invio pacchetto al DB");
-        }
+        logIfDebugging("Comincio l'operazione di invio pacchetto al DB");
         // Signals that we start the insert to server
         generateServerStateEvent(1);
         try {
@@ -931,7 +888,6 @@ public class TestMachine {
                 VALUES (default, default, 'codicescheda', 'goodornot', 'username', 'macchina', 'login_id);
             */
             String query;
-            
             
             try{
                 // INSERT for tracking_system.board table
@@ -948,9 +904,7 @@ public class TestMachine {
                 // Does nothing
             }
             
-            if (debug){
-                logger.log(Level.SEVERE, "Provo a inviare il test al DB");
-            }
+            logIfDebugging("Provo a inviare il test al DB");
             // INSERT for tracking_system.test table
             query = "INSERT INTO tracking_system.test "
                     + "VALUES (default, default, '"
@@ -968,17 +922,13 @@ public class TestMachine {
             statement.executeUpdate(query);
             conn.close();
             statement.close();
-            if (debug){
-                logger.log(Level.SEVERE, "Test inviato al DB con successo");
-            }
+            logIfDebugging("Test inviato al DB con successo");
             // Signals that everything went alright
             generateServerStateEvent(2);
             return true;
 
         }catch (SQLException ex) {
-            if (debug){
-                logger.log(Level.SEVERE, "Errore nell'inviare il test al DB");
-            }
+            logIfDebugging("Errore nell'inviare il test al DB");
             logger.log(Level.SEVERE, null, ex);
             generateDisplayErrorEvent("Errore dal server: "
                                     + System.lineSeparator()
@@ -992,9 +942,7 @@ public class TestMachine {
     }
     
     private void createSerialPortListener(){
-        if (debug){
-            logger.log(Level.SEVERE, "Creo un nuovo serialPortListener");
-        }
+        logIfDebugging("Creo un nuovo serialPortListener");
         serialPort.addDataListener(new SerialPortDataListener() {
             @Override
             public int getListeningEvents() { return SerialPort.LISTENING_EVENT_DATA_AVAILABLE; }
@@ -1004,117 +952,74 @@ public class TestMachine {
                 if (event.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE){
                     return;
                 }
-                
-                if (debug){
-                    logger.log(Level.SEVERE, "Evento dati ricevuti su porta seriale generato");
-                }
-                
+                logIfDebugging("Evento dati ricevuti su porta seriale generato");
                 byte[] headerInByte = new byte[1];
                 serialPort.readBytes(headerInByte, 1);
                 String header = new String(headerInByte);
-                if (debug){
-                    logger.log(Level.SEVERE, "Letto il primo byte");
-                }
+                logIfDebugging("Letto il primo byte");
                 
                 switch (header) {
                     case "D":
-                        //System.out.println("Ricevuto D");
-                        if (debug){
-                            logger.log(Level.SEVERE, "E' stato ricevuto un header data packet");
-                        }
+                        logIfDebugging("E' stato ricevuto un header data packet");
                         serialPortJustStarted = false;
                         readyToGoodToGoSignal = false;
                         if (errorState){
                             errorState = false;
                             generateNormalStateEvent();
                         }
-                        if(readDataPacketInBlockingMode()){
-                            //System.out.println("pacchetto ricevuto per intero!");
+                        if(readDataPacketInTimeoutMode()){
                             if(sendCurrentPacketToDB()){
                                 if (currentBoard.isGood()){
-                                    if (debug){
-                                        logger.log(Level.SEVERE, "La scheda è buona, si può mandare il segnale di via libera, metto il flag readyToGoodToGoSignal a 1");
-                                    }
+                                    logIfDebugging("La scheda è buona, si può mandare il segnale di via libera, metto il flag readyToGoodToGoSignal a 1");
                                     readyToGoodToGoSignal = true;
                                 }
                                 else{
-                                    if (debug){
-                                        logger.log(Level.SEVERE, "La scheda non è buona, genero evento di scheda non buona");
-                                    }
+                                    logIfDebugging("La scheda non è buona, genero evento di scheda non buona");
                                     generateBoardNotGoodEvent();
                                 }
-                                //System.out.println("pacchetto spedito al db e ora procedo");
                             }
                             else{
-                                if (debug){
-                                    logger.log(Level.SEVERE, "l'invio pacchetto al DB  non è andato a buon fine, invio segnale di rescan");
-                                }
-                                //sendReScanSignal();
+                                logIfDebugging("l'invio pacchetto al DB  non è andato a buon fine.");
                             }
-                            if (debug){
-                                logger.log(Level.SEVERE, "Ho finito di leggere il data packet");
-                            }
+                            logIfDebugging("Ho finito di leggere il data packet");
                         }
                         else{
-                            if (debug){
-                                logger.log(Level.SEVERE, "lettura pacchetto dati ha ritornato null");
-                            }
+                            logIfDebugging("lettura pacchetto dati ha ritornato null");
                             sendReScanSignal();
                         }
                         flushSerialPort();
-                        if (debug){
-                            logger.log(Level.SEVERE, "Finito di gestire l'header data packet");
-                        }
+                        logIfDebugging("Finito di gestire l'header data packet");
                         break;
                     case "E":
-                        //System.err.println("ricevuto E");
-                        if (debug){
-                            logger.log(Level.SEVERE, "è stato ricevuto un header error packet");
-                        }
+                        logIfDebugging("è stato ricevuto un header error packet");
                         serialPortJustStarted = false;
                         readyToGoodToGoSignal = false;
-                        Integer errorCode = readErrorPacketInBlockingMode();
+                        Integer errorCode = readErrorPacketInTimeoutMode();
                         // check if timeout occurred
                         if (errorCode == null){
-                            if (debug) {
-                                logger.log(Level.SEVERE, "Errore di ricezione error packet, riscansiono");
-                            }
+                            logIfDebugging("Errore di ricezione error packet, riscansiono");
                             sendReScanSignal();
                             break;
                         }
                         handleArduinoError(errorCode);
                         flushSerialPort();
-                        if (debug){
-                            logger.log(Level.SEVERE, "finito di gestire l'header error packet");
-                        }
+                        logIfDebugging("finito di gestire l'header error packet");
                         break;
                     case "G":
-                        if (debug){
-                            logger.log(Level.SEVERE, "è stato ricevuto un header request good to go packet");
-                        }
-                        //System.out.println("ricevuto G, Serial just started: " + serialPortJustStarted);
+                        logIfDebugging("è stato ricevuto un header request good to go packet");
                         if(serialPortJustStarted){
-                            //serialPortJustStarted = false;
-                            if (debug){
-                                logger.log(Level.SEVERE, "Riscansiono perchè la porta seriale è stata appena accesa");
-                            }
+                            logIfDebugging("Riscansiono perchè la porta seriale è stata appena accesa");
                             sendReScanSignal();
                         }
                         if(readyToGoodToGoSignal){
-                            if (debug){
-                                logger.log(Level.SEVERE, "Il flag readyToGoodToGoSignal era a 1, quindi invia il segnale di goodToGo");
-                            }
+                            logIfDebugging("Il flag readyToGoodToGoSignal era a 1, quindi invia il segnale di goodToGo");
                             sendGoodToGoSignal();
                         }
                         flushSerialPort();
-                        if (debug){
-                            logger.log(Level.SEVERE, "finito di gestire l'header G");
-                        }
+                        logIfDebugging("finito di gestire l'header G");
                         break;
                     default:
-                        if (debug){
-                            logger.log(Level.SEVERE, "STRANO: sono nel caso defaut nello switch degli header nell'evento seriale!");
-                        }
+                        logIfDebugging("STRANO: sono nel caso defaut nello switch degli header nell'evento seriale!");
                         break;
                 }
             }

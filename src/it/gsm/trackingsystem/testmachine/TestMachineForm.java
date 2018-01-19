@@ -185,13 +185,15 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
     
     @Override
     public void logoutOccurredEvent(){
-        connectButton.setText("Start");
-        connectButton.setBackground(Color.GREEN);
-        goodToGoButton.setEnabled(false);
-        reScanButton.setEnabled(false);
-        currentUserLabel.setText("");
-        this.setVisible(false);
-        new LoginFrame(this, testMachine).setVisible(true);
+        if(this.isVisible()){
+            connectButton.setText("Start");
+            connectButton.setBackground(Color.GREEN);
+            goodToGoButton.setEnabled(false);
+            reScanButton.setEnabled(false);
+            currentUserLabel.setText("");
+            this.setVisible(false);
+            new LoginFrame(this, testMachine).setVisible(true);
+        }
     }
     
     @Override
