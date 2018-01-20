@@ -571,6 +571,7 @@ public class LoginFrame extends javax.swing.JFrame {
         adminUsernameTextField.setText("");
         usernameChangePasswordWithAdminTextField.setText("");
         newPasswordChangePasswordWithAdminPasswordField.setText("");
+        repeatNewPasswordChangePasswordWithAdminPasswordField.setText("");
     }//GEN-LAST:event_changePasswordWithAdminFrameWindowClosing
 
     private void changePasswordWithAdminButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changePasswordWithAdminButtonActionPerformed
