@@ -319,7 +319,7 @@ public class TestMachine {
         // Deletes the last scheduled logout
         logoutTimer.cancel();
         // Finds the nearest login in the (future) timeline
-        if (scheduledLogouts != null){
+        if (scheduledLogouts != null && !scheduledLogouts.isEmpty()){
             logoutTimer = new Timer();
             // Initializes nextLogout with maximum value
             LocalTime nextLogout = LocalTime.MAX;
