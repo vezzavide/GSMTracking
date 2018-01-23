@@ -633,6 +633,13 @@ public class TestMachine {
                                         + ex.toString());
             return false;
         }
+        catch(java.lang.IllegalArgumentException ex){
+            logger.log(Level.SEVERE, null, ex);
+            generateDisplayErrorEvent("Errore:"
+                                        + System.lineSeparator()
+                                        + ex.toString());
+            return false;
+        }
     }
     
     public void logout(){
