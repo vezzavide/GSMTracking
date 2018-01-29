@@ -78,7 +78,7 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
     
     @Override
     public void errorStateEvent(){
-        goodToGoButton.setEnabled(true);
+        //goodToGoButton.setEnabled(true);
         reScanButton.setEnabled(true);
         
         boardTextField.setText("Errore");
@@ -93,12 +93,12 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
                 //...Perform a task...
                 if (toggle){
                     toggle = false;
-                    goodToGoButton.setBackground(Color.ORANGE);
+                    //goodToGoButton.setBackground(Color.ORANGE);
                     reScanButton.setBackground(Color.ORANGE);
                 }
                 else{
                     toggle = true;
-                    goodToGoButton.setBackground(null);
+                    //goodToGoButton.setBackground(null);
                     reScanButton.setBackground(null);
                 }
                 
@@ -113,9 +113,9 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
         //boardTextField.setText("");
         //testOutcomeTextField.setText("");
         //testOutcomeTextField.setBackground(null);
-        goodToGoButton.setEnabled(false);
+        //goodToGoButton.setEnabled(false);
         reScanButton.setEnabled(false);
-        goodToGoButton.setBackground(null);
+        //goodToGoButton.setBackground(null);
         reScanButton.setBackground(null);
         
         try{
@@ -131,11 +131,15 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
     
     @Override
     public void boardNotGoodEvent(){
+        // Below code has been commented because of new specification:
+        // application must send goodToGo signal EVEN when board is not good!
+        // I'll delete goodToGoButton too, useless at this point.
+        /*
         goodToGoButton.setEnabled(true);
         
         int delay = 500; //milliseconds
         ActionListener taskPerformer = new ActionListener() {
-            boolean toggle = true;
+            boolean toggle = true
             public void actionPerformed(ActionEvent evt) {
                 //...Perform a task...
                 if (toggle){
@@ -151,6 +155,7 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
         };
         boardNotGoodStateBlinkTimer = new Timer(delay, taskPerformer);
         boardNotGoodStateBlinkTimer.start();
+        */
     }
     
     @Override
@@ -173,7 +178,7 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
     public void disconnectedEvent(){
         connectButton.setText("Start");
         connectButton.setBackground(Color.GREEN);
-        goodToGoButton.setEnabled(false);
+        //goodToGoButton.setEnabled(false);
         reScanButton.setEnabled(false);
         programStateLabel.setText("Stato: SPENTO");
         boardTextField.setText("");
@@ -188,7 +193,7 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
         if(this.isVisible()){
             connectButton.setText("Start");
             connectButton.setBackground(Color.GREEN);
-            goodToGoButton.setEnabled(false);
+            //goodToGoButton.setEnabled(false);
             reScanButton.setEnabled(false);
             currentUserLabel.setText("");
             this.setVisible(false);
@@ -259,7 +264,6 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
         forceGoodToGoButton = new javax.swing.JButton();
         connectButton = new javax.swing.JButton();
         reScanButton = new javax.swing.JButton();
-        goodToGoButton = new javax.swing.JButton();
         boardTextField = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         testOutcomeTextField = new javax.swing.JTextField();
@@ -280,6 +284,7 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
         jMenu2 = new javax.swing.JMenu();
         settingsMenuItem = new javax.swing.JMenuItem();
 
+        forceSignalsFrame.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         forceSignalsFrame.addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 forceSignalsFrameWindowClosing(evt);
@@ -380,14 +385,6 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
             }
         });
 
-        goodToGoButton.setText("Procedi");
-        goodToGoButton.setEnabled(false);
-        goodToGoButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                goodToGoButtonActionPerformed(evt);
-            }
-        });
-
         boardTextField.setEditable(false);
         boardTextField.setHorizontalAlignment(javax.swing.JTextField.LEFT);
 
@@ -461,9 +458,7 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(connectButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(reScanButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(goodToGoButton))
+                        .addComponent(reScanButton, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(programStateLabel)
@@ -497,7 +492,6 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(connectButton)
-                    .addComponent(goodToGoButton)
                     .addComponent(reScanButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -552,12 +546,6 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
         
     }//GEN-LAST:event_connectButtonActionPerformed
 
-    private void goodToGoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goodToGoButtonActionPerformed
-        // TODO add your handling code here:
-        testMachine.sendGoodToGoSignal();
-        normalStateEvent();
-    }//GEN-LAST:event_goodToGoButtonActionPerformed
-
     private void reScanButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reScanButtonActionPerformed
         // TODO add your handling code here:
         testMachine.sendReScanSignal();
@@ -605,6 +593,8 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
             testMachine.sendReScanSignal();
             normalStateEvent();
             this.setEnabled(true);
+            adminPasswordField.setText("");
+            adminUsernameTextField.setText("");
             forceSignalsFrame.dispose();
         }
     }//GEN-LAST:event_forceReScanButtonActionPerformed
@@ -622,6 +612,8 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
             testMachine.sendGoodToGoSignal();
             normalStateEvent();
             this.setEnabled(true);
+            adminPasswordField.setText("");
+            adminUsernameTextField.setText("");
             forceSignalsFrame.dispose();
         }
     }//GEN-LAST:event_forceGoodToGoButtonActionPerformed
@@ -673,7 +665,6 @@ public class TestMachineForm extends javax.swing.JFrame implements TestMachineLi
     private javax.swing.JButton forceReScanButton;
     private javax.swing.JFrame forceSignalsFrame;
     private javax.swing.JMenuItem forceSignalsMenuItem;
-    private javax.swing.JButton goodToGoButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

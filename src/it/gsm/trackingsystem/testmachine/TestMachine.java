@@ -981,8 +981,11 @@ public class TestMachine {
                                     readyToGoodToGoSignal = true;
                                 }
                                 else{
-                                    logIfDebugging("La scheda non è buona, genero evento di scheda non buona");
+                                    logIfDebugging("La scheda non è buona, genero evento di scheda non buona E  METTO IL FLAG readyToGoodToGoSignal A 1");
                                     generateBoardNotGoodEvent();
+                                    // readyToGoodToGoSignal enabled because of new specification:
+                                    // application needs to send good to go EVEN when board is not good.
+                                    readyToGoodToGoSignal = true;
                                 }
                             }
                             else{
