@@ -5,6 +5,7 @@
 #       every time to check if the folder for the current day exists
 #       (the more folders, the more time and bandwidth are consumed)
 
+
 import mysql.connector
 from datetime import date
 from datetime import datetime
