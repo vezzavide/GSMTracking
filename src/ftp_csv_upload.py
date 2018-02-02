@@ -15,30 +15,30 @@ import sys
 
 # START PROPERITES ###############################
 
-#debugEnabled = True
-#ftpServer = "NASSRV"
-#ftpUsername = "USER"
-#ftpPassword = "user"
-#ftpTestsDirectory = "DTDV"
-#mysqlServer = "localhost"
-#mysqlUser = "application"
-#mysqlPassword = "12Application"
-#mysqlDatabase = "tracking_system"
-#machineA = "TRI1" # Name used on MySQL server
-#machineB = "TRI2" # Name used on MySQL server
-
-# TESTING PROPERTIES:
 debugEnabled = True
-ftpServer = "localhost"
-ftpUsername = "abdhul"
-ftpPassword = "12Vezzavide"
-ftpTestsDirectory = "tests"
-mysqlServer = "192.168.1.4"
+ftpServer = "NASSRV"
+ftpUsername = "USER"
+ftpPassword = "user"
+ftpTestsDirectory = "DTDV"
+mysqlServer = "localhost"
 mysqlUser = "application"
 mysqlPassword = "12Application"
 mysqlDatabase = "tracking_system"
 machineA = "TRI1" # Name used on MySQL server
-machineB = "TRI2" # Name used on MySQL servers
+machineB = "TRI2" # Name used on MySQL server
+
+# TESTING PROPERTIES:
+#debugEnabled = True
+#ftpServer = "localhost"
+#ftpUsername = "abdhul"
+#ftpPassword = "12Vezzavide"
+#ftpTestsDirectory = "tests"
+#mysqlServer = "192.168.1.4"
+#mysqlUser = "application"
+#mysqlPassword = "12Application"
+#mysqlDatabase = "tracking_system"
+#machineA = "TRI1" # Name used on MySQL server
+#machineB = "TRI2" # Name used on MySQL servers
 
 # END PROPERTIES #################################
 
