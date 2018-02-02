@@ -994,8 +994,11 @@ public class TestMachine {
                             logIfDebugging("Ho finito di leggere il data packet");
                         }
                         else{
-                            logIfDebugging("lettura pacchetto dati ha ritornato null");
-                            sendReScanSignal();
+                            logIfDebugging("lettura pacchetto dati ha ritornato false");
+                            //sendReScanSignal();
+                            errorState = true;
+                            generateErrorStateEvent();
+                            generateDisplayErrorEvent("Probabile disturbo sulla linea USB.\n");
                         }
                         flushSerialPort();
                         logIfDebugging("Finito di gestire l'header data packet");

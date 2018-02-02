@@ -105,6 +105,7 @@ public class settingsFrame extends javax.swing.JFrame {
 
         debugCheckBox.setText("Debug");
 
+        serialPortComboBox.setEditable(true);
         serialPortComboBox.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
             public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
                 serialPortComboBoxPopupMenuWillBecomeVisible(evt);
