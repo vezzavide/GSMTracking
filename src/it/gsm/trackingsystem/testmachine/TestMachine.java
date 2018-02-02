@@ -919,10 +919,6 @@ public class TestMachine {
                     + "', '"
                     + currentBoard.isGoodString()
                     + "', '"
-                    + user.getUsername()
-                    + "', '"
-                    + machine
-                    + "', '"
                     + user.getLoginIDToString()
                     + "');";
             //System.out.println("Eseguo query: " + query);
