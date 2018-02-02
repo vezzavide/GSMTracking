@@ -15,30 +15,30 @@ import sys
 
 # START PROPERITES ###############################
 
-debugEnabled = True
-ftpServer = "NASSRV"
-ftpUsername = "USER"
-ftpPassword = "user"
-ftpTestsDirectory = "DTDV"
-mysqlServer = "localhost"
-mysqlUser = "application"
-mysqlPassword = "12Application"
-mysqlDatabase = "tracking_system"
-machineA = "TRI1" # Name used on MySQL server
-machineB = "TRI2" # Name used on MySQL server
-
-# TESTING PROPERTIES:
 #debugEnabled = True
-#ftpServer = "localhost"
-#ftpUsername = "abdhul"
-#ftpPassword = "12Vezzavide"
-#ftpTestsDirectory = "tests"
+#ftpServer = "NASSRV"
+#ftpUsername = "USER"
+#ftpPassword = "user"
+#ftpTestsDirectory = "DTDV"
 #mysqlServer = "localhost"
 #mysqlUser = "application"
 #mysqlPassword = "12Application"
 #mysqlDatabase = "tracking_system"
-#machineA = "A" # Name used on MySQL server
-#machineB = "B" # Name used on MySQL server
+#machineA = "TRI1" # Name used on MySQL server
+#machineB = "TRI2" # Name used on MySQL server
+
+# TESTING PROPERTIES:
+debugEnabled = True
+ftpServer = "localhost"
+ftpUsername = "abdhul"
+ftpPassword = "12Vezzavide"
+ftpTestsDirectory = "tests"
+mysqlServer = "192.168.1.4"
+mysqlUser = "application"
+mysqlPassword = "12Application"
+mysqlDatabase = "tracking_system"
+machineA = "TRI1" # Name used on MySQL server
+machineB = "TRI2" # Name used on MySQL servers
 
 # END PROPERTIES #################################
 
@@ -126,12 +126,22 @@ try:
     except Exception:
         debug("No lastSentRecord file")
 
-    # Gets list of users for today tests
+#    # Gets list of users for today tests
+#    userQuery = ("SELECT DISTINCT user.surname, user.name, user.username "
+#                 "FROM tracking_system.test "
+#                 "INNER JOIN user "
+#                 "ON user.username = test.user "
+#                 "WHERE DATE(test.datetime) = '" + today + "';")
+    
     userQuery = ("SELECT DISTINCT user.surname, user.name, user.username "
-                 "FROM tracking_system.test "
-                 "INNER JOIN user "
-                 "ON user.username = test.user "
-                 "WHERE DATE(test.datetime) = '" + today + "';")
+                "FROM tracking_system.user "
+                "INNER JOIN (SELECT login.username FROM test "
+                            "INNER JOIN login "
+                            "ON test.login_id = login.id "
+                            "WHERE DATE(test.datetime) = '" + today + "') "
+                "AS test_with_user "
+                "ON user.username = test_with_user.username;")
+    
     userCursor.execute(userQuery)
     # I need to fetch now the results so that row count can be incremented to its
     # exact value (otherwise it would stay at -1 until the whole cursor was iterated
@@ -147,13 +157,47 @@ try:
     # Creates whole file for the current day
     fileName = today + ".csv"
     testCursor = dataConnection.cursor()
-    testQuery = ("SELECT test.id, test.datetime, test.board, test.good, test.machine, test.login_id, user.surname, user.name, user.username "
-                 "FROM tracking_system.test "
-                 "INNER JOIN user "
-                 "ON user.username = test.user "
-                 "WHERE DATE(test.datetime) = '" + today + "' "
-                 "AND test.id > '" + str(lastSentRecord) + "' "
-                 "ORDER BY test.id;")
+#    testQuery = ("SELECT test.id, "
+#                    "test.datetime, "
+#                    "test.board, "
+#                    "test.good, "
+#                    "login.machine, "
+#                    "test.login_id, "
+#                    "user.surname, "
+#                    "user.name, "
+#                    "user.username "
+#                 "FROM tracking_system.test "
+#                 "INNER JOIN user "
+#                 "ON user.username = test.user "
+#                 "WHERE DATE(test.datetime) = '" + today + "' "
+#                 "AND test.id > '" + str(lastSentRecord) + "' "
+#                 "ORDER BY test.id;")
+    
+    testQuery = ("SELECT test_with_login.id, "
+                    "test_with_login.datetime, "
+                    "test_with_login.board, "
+                    "test_with_login.good, "
+                    "test_with_login.machine, "
+                    "test_with_login.login_id, "
+                    "user.surname, "
+                    "user.name, "
+                    "user.username "
+                "FROM tracking_system.user "
+                "INNER JOIN (SELECT test.id, "
+                                "test.datetime, "
+                                "test.board, "
+                                "test.good, "
+                                "login.username, "
+                                "login.machine, "
+                                "login.id AS login_id FROM test "
+                            "INNER JOIN login "
+                            "ON test.login_id = login.id "
+                            "WHERE DATE(test.datetime) = '" + today + "' "
+                            "AND test.id > '" + str(lastSentRecord) + "') "
+                "AS test_with_login "
+                "ON user.username = test_with_login.username "
+                "ORDER BY test_with_login.id;")
+    
     testCursor.execute(testQuery)
     fetchedTestCursor = testCursor.fetchall()
     numberOfNewTests = testCursor.rowcount
@@ -223,16 +267,46 @@ try:
     # Then creates and send a file for each user of the current day
     for (surname, name, username) in fetchedUserCursor:
         debug("\n\nANALIZING NEW USER")
-        userFileName = surname.encode('utf-8') + "_" + name.encode('utf-8') + "_(" + username.encode('utf-8') + ")_" + today
+        userFileName = (surname.encode('utf-8') + "_"
+                        + name.encode('utf-8') + "_("
+                        + username.encode('utf-8') + ")_"
+                        + today)
         testCursor = dataConnection.cursor()
-        testQuery = ("SELECT test.id, test.datetime, test.board, test.good, test.machine, test.login_id, user.surname, user.name, user.username "
-                     "FROM tracking_system.test "
-                     "INNER JOIN user "
-                     "ON user.username = test.user "
-                     "WHERE test.user = '" + username + "' "
-                     "AND DATE(test.datetime) = '" + today + "' "
-                     "AND test.id > '" + str(lastSentRecord) + "' "
-                     "ORDER BY test.id;")
+#        testQuery = ("SELECT test.id, test.datetime, test.board, test.good, test.machine, test.login_id, user.surname, user.name, user.username "
+#                     "FROM tracking_system.test "
+#                     "INNER JOIN user "
+#                     "ON user.username = test.user "
+#                     "WHERE test.user = '" + username + "' "
+#                     "AND DATE(test.datetime) = '" + today + "' "
+#                     "AND test.id > '" + str(lastSentRecord) + "' "
+#                     "ORDER BY test.id;")
+        
+        testQuery = ("SELECT test_with_login.id, "
+                        "test_with_login.datetime, "
+                        "test_with_login.board, "
+                        "test_with_login.good, "
+                        "test_with_login.machine, "
+                        "test_with_login.login_id, "
+                        "user.surname, "
+                        "user.name, "
+                        "user.username "
+                    "FROM tracking_system.user "
+                    "INNER JOIN (SELECT test.id, "
+                                    "test.datetime, "
+                                    "test.board, "
+                                    "test.good, "
+                                    "login.username, "
+                                    "login.machine, "
+                                    "login.id AS login_id FROM test "
+                                "INNER JOIN login "
+                                "ON test.login_id = login.id "
+                                "WHERE DATE(test.datetime) = '" + today + "' "
+                                "AND test.id > '" + str(lastSentRecord) + "') "
+                    "AS test_with_login "
+                    "ON user.username = test_with_login.username "
+                    "WHERE test_with_login.username ='" + username + "' "
+                    "ORDER BY test_with_login.id;")
+        
         testCursor.execute(testQuery)
         csvIn = open(userFileName + ".csv" + ".temp", "w")
         csvIn.write("test_id;datetime;scheda;good;macchina;login_id;cognome;nome;username\r\n")
@@ -263,23 +337,43 @@ try:
         
         # Fetch working time segments for machineA
         workTimeCursor = dataConnection.cursor()
+#        query = ("SELECT MIN(test.datetime), MAX(test.datetime) "
+#                "FROM tracking_system.test "
+#                "WHERE test.user = '" + username + "' "
+#                "AND DATE(test.datetime) = '" + today + "' "
+#                "AND test.machine = '" + machineA + "' "
+#                "GROUP BY test.login_id;")
+        
         query = ("SELECT MIN(test.datetime), MAX(test.datetime) "
                 "FROM tracking_system.test "
-                "WHERE test.user = '" + username + "' "
+                "INNER JOIN login "
+                "ON test.login_id = login.id "
+                "WHERE login.username = '" + username + "' "
                 "AND DATE(test.datetime) = '" + today + "' "
-                "AND test.machine = '" + machineA + "' "
+                "AND login.machine = '" + machineA + "' "
                 "GROUP BY test.login_id;")
+        
         workTimeCursor.execute(query)
         workTimeMachineA = workTimeCursor.fetchall()
         
         # Fetch working time segments for machineB
         workTimeCursor = dataConnection.cursor()
+#        query = ("SELECT MIN(test.datetime), MAX(test.datetime) "
+#                "FROM tracking_system.test "
+#                "WHERE test.user = '" + username + "' "
+#                "AND DATE(test.datetime) = '" + today + "' "
+#                "AND test.machine = '" + machineB + "' "
+#                "GROUP BY test.login_id;")
+        
         query = ("SELECT MIN(test.datetime), MAX(test.datetime) "
                 "FROM tracking_system.test "
-                "WHERE test.user = '" + username + "' "
+                "INNER JOIN login "
+                "ON test.login_id = login.id "
+                "WHERE login.username = '" + username + "' "
                 "AND DATE(test.datetime) = '" + today + "' "
-                "AND test.machine = '" + machineB + "' "
+                "AND login.machine = '" + machineB + "' "
                 "GROUP BY test.login_id;")
+        
         workTimeCursor.execute(query)
         workTimeMachineB = workTimeCursor.fetchall()
 
